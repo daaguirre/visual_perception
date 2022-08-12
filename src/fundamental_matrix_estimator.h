@@ -4,19 +4,23 @@
 #include "Types.h"
 #include <Eigen/Eigen>
 
+namespace vp
+{
 
 class FundamentalMatrixEstimator
 {
 public:
     FundamentalMatrixEstimator();
 
-    Ptr<Eigen::Matrix3d> estimate(const Eigen::MatrixX2d& x1, const Eigen::MatrixX2d& x2);
+    Eigen::Matrix3d estimate(const Eigen::MatrixXd& x1, const Eigen::MatrixXd& x2) const;
 
 private:
 
-    Ptr<Eigen::MatrixXd> buildMatrixA(const Eigen::MatrixX2d& x1, const Eigen::MatrixX2d& x2);
+    std::unique_ptr<Eigen::MatrixXd> buildMatrixA(const Eigen::MatrixXd& x1, const Eigen::MatrixXd& x2) const;
 
 
 };
+
+}
 
 #endif

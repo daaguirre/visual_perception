@@ -11,8 +11,9 @@ set(${libName}_sources
         io/numpy/Reader.h
         io/numpy/Reader.cpp
         io/numpy/StrArray.h
-        FundamentalMatrixEstimator.h
-        FundamentalMatrixEstimator.cpp
+        utils/utils.h
+        fundamental_matrix_estimator.h
+        fundamental_matrix_estimator.cpp
 )
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
