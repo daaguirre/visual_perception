@@ -14,7 +14,4 @@
         "titleBar.activeBackground": "#0ea700",
         // "titleBar.activeBackground": "#a75600"
     },
-    "files.associations": {
-        "tensor": "cpp"
-    },
 }
