@@ -1,13 +1,13 @@
 
-#ifndef NUMPYARRAYDESERIALIZER_H
-#define NUMPYARRAYDESERIALIZER_H
+#ifndef __IO_NUMPY_ARRAY_IO_H_
+#define __IO_NUMPY_ARRAY_IO_H_
 
 #include <iostream>
 #include <string>
-#include "Reader.h"
-#include "Array.h"
+#include "reader.h"
+#include "array.h"
 
-namespace numpy
+namespace io::numpy
 {
 
 /*!
@@ -45,16 +45,16 @@ struct ArrayData<std::string, ArrayT>
         const Buffer& arrayData = numpyFile.getArrayData();
 
         //TODO: take into account data endianness
-        array = ArrayT(header.shape, header.dType.bytes, arrayData);
+        array = ArrayT(header.shape, header.dtype.bytes, arrayData);
     }
 };
 
 /*!
  * class for serializing a deserializing numpy arrays
  */
-class ArraySerializer
+class ArrayIO
 {
-    ArraySerializer() = default;
+    ArrayIO() = default;
 
     /*!
      * checks if can deserialize input numpy file. Only checks if the array in the
@@ -68,7 +68,7 @@ class ArraySerializer
     static bool canDeserialize(const Header& header, ArrayT& array)
     {
         using DataT = typename ArrayT::Scalar;
-        if(header.dType.type == DataType::UNKNOWN || header.dType.bytes == 0)
+        if(header.dtype.type == DataType::UNKNOWN || header.dtype.bytes == 0)
         {
             std::cerr << "Data type is unknown." << std::endl;
             return false;
@@ -81,12 +81,12 @@ class ArraySerializer
         }
 
         DType expectedDType = ArrayType<DataT>::value();
-        if(!header.dType.match(expectedDType))
+        if(!header.dtype.match(expectedDType))
         {
-            std::cerr << "ArraySerializer Error because of type mismatching" << std::endl
+            std::cerr << "ArrayIO Error because of type mismatching" << std::endl
                       << "Expected type is " << DATA_TYPE_TO_STR.at(ArrayType<DataT>::value().type)
                       << ArrayType<DataT>::value().bytes << std::endl
-                      << "File type is " << DATA_TYPE_TO_STR.at(header.dType.type) << header.dType.bytes << std::endl;
+                      << "File type is " << DATA_TYPE_TO_STR.at(header.dtype.type) << header.dtype.bytes << std::endl;
             return false;
         }
 
@@ -98,18 +98,18 @@ public:
     /*!
      * Deserializes numpy file in path
      * @tparam ArrayT expected array type
-     * @param numpyFilePath path where numpy file can be found
+     * @param numpy_file_path path where numpy file can be found
      * @param array output array
      * @return true if operation was successful, false otherwise
      */
     template<typename ArrayT>
-    static bool deserialize(const std::string& numpyFilePath, ArrayT& array)
+    static bool deserialize(const std::string& numpy_file_path, ArrayT& array)
     {
         Reader reader;
-        File::Ptr fileData = reader.readFile(numpyFilePath);
-        if(fileData)
+        File::Ptr file_data = reader.readFile(numpy_file_path);
+        if(file_data)
         {
-            return deserialize(*fileData, array);
+            return deserialize(*file_data, array);
         }
 
         return false;
@@ -118,14 +118,14 @@ public:
     /*!
      * deserializes input numpy file
      * @tparam ArrayT expected array type
-     * @param numpyFile input numpy file
+     * @param numpy_file input numpy file
      * @param array output array
      * @return true if operation was successful, false otherwise
      */
     template<typename ArrayT>
-    static bool deserialize(const File& numpyFile, ArrayT& array)
+    static bool deserialize(const File& numpy_file, ArrayT& array)
     {
-        if(!canDeserialize(numpyFile.getHeader(), array))
+        if(!canDeserialize(numpy_file.getHeader(), array))
         {
             return false;
         }
@@ -134,7 +134,7 @@ public:
 
         try
         {
-            ArrayData<DataT, ArrayT>::copy(numpyFile, array);
+            ArrayData<DataT, ArrayT>::copy(numpy_file, array);
         }
         catch(std::exception& e)
         {
@@ -163,4 +163,4 @@ public:
 
 }
 
-#endif // NUMPYARRAYDESERIALIZER_H
+#endif // __IO_NUMPY_ARRAY_IO_H_

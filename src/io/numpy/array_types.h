@@ -3,13 +3,13 @@
 //
 
 
-#ifndef ARRAYTYPES_H
-#define ARRAYTYPES_H
+#ifndef __IO_NUMPY_ARRAY_TYPES_H_
+#define __IO_NUMPY_ARRAY_TYPES_H_
 
 #include <stdexcept>
 #include <exception>
 
-namespace numpy
+namespace io::numpy
 {
 
 /*!
@@ -191,4 +191,4 @@ struct ArrayType<std::wstring>
 
 }
 
-#endif //HIGHLEVELENTITIES_ARRAYTYPES_H
+#endif // __IO_NUMPY_ARRAY_TYPES_H_

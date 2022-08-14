@@ -1,15 +1,16 @@
 
-#ifndef NUMPYREADER_H
-#define NUMPYREADER_H
+#ifndef __IO_NUMPY_READER_H_
+#define __IO_NUMPY_READER_H_
 
+#include <array>
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
-#include <map>
-#include <array>
-#include <memory>
-#include "ArrayTypes.h"
 
-namespace numpy
+#include "array_types.h"
+
+namespace io::numpy
 {
 
 using Byte = unsigned char;
@@ -38,15 +39,13 @@ struct Header
     std::string str;
     Shape shape;
     Endianness endianness;
-    DType dType;
+    DType dtype;
 
     friend File;
     friend Reader;
-private:
-    Header()
-    {
 
-    }
+private:
+    Header() {}
 };
 
 /*!
@@ -56,9 +55,7 @@ private:
  */
 class File
 {
-
 public:
-
     using Ptr = std::shared_ptr<File>;
     using ConstPtr = std::shared_ptr<const File>;
 
@@ -66,53 +63,37 @@ public:
      * \brief gets numpy file Major Version
      * \return major version as unsigned char
      */
-    unsigned char getMajorVersion() const
-    {
-        return _majorVersion;
-    }
+    unsigned char getMajorVersion() const { return major_version; }
 
     /*!
      * \brief get numpy file Minor Version
      * \return minor version as unsigned char
      */
-    unsigned char getMinorVersion() const
-    {
-        return _minorVersion;
-    }
+    unsigned char getMinorVersion() const { return minor_version; }
 
     /*!
      * \brief gets numpy file header
      * \return
      */
-    const Header &getHeader() const
-    {
-        return _header;
-    }
+    const Header &getHeader() const { return header; }
 
     /*!
      * \brief gets Array Data
      * \return as a vector of bytes
      */
-    const Buffer &getArrayData() const
-    {
-        return _arrayData;
-    }
+    const Buffer &getArrayData() const { return array_data; }
 
     friend Reader;
     friend NPZReader;
     friend std::pair<const std::string, File>;
 
 private:
+    File() {}
 
-    File()
-    {
-
-    }
-
-    unsigned char _majorVersion;
-    unsigned char _minorVersion;
-    Header _header;
-    Buffer _arrayData;
+    unsigned char major_version;
+    unsigned char minor_version;
+    Header header;
+    Buffer array_data;
 };
 
 class Reader
@@ -161,15 +142,16 @@ class Reader
      * \brief numpy data string identifier
      */
     static const std::string NUMPY_DATA_TYPE_SUBSTR;
+
 public:
     Reader();
 
     /*!
      * \brief reads a numpy file
-     * \param filePath path to file
+     * \param file_path path to file
      * \return numpy file deserialized as a File struct
      */
-    File::Ptr readFile(const std::string &filePath);
+    File::Ptr readFile(const std::string &file_path);
 
     /*!
      * reads a numpy file from a binary buffer
@@ -177,40 +159,39 @@ public:
      * @return a valid numpy file if operation was successful,
      * otherwise invalid
      */
-    File::Ptr readNumpyBuffer(const Buffer& buffer);
+    File::Ptr readNumpyBuffer(const Buffer &buffer);
 
 protected:
-
     /*!
      * \brief looks for numpy magic string in file
-     * \param fileData numpy file binary data
+     * \param file_data numpy file binary data
      * \return true if binary data represents a numpy file, false otherwise
      */
-    bool isNumpyFile(const Buffer &fileData);
+    bool isNumpyFile(const Buffer &file_data);
 
     /*!
      * \brief gets header from numpy file binary data
-     * \param fileData numpy file binary data
+     * \param file_data numpy file binary data
      * \return numpy header as Header struct and the number of bytes
      * occupied by the header
      */
-    std::pair<Header, size_t> getHeader(const Buffer &fileData);
+    std::pair<Header, size_t> getHeader(const Buffer &file_data);
 
     /*!
      * \brief gets array shape from header info
-     * \param headerString numpy header string
+     * \param header_string numpy header string
      * \return array shape as a vector of ints
      */
-    Shape getArrayShapeFromHeaderString(const std::string &headerString);
+    Shape getArrayShapeFromHeaderString(const std::string &header_string);
 
     /*!
      * processes the 'Descr' field of the numpy header
-     * @param headerStr input numpy header string
+     * @param header_str input numpy header string
      * @return Endiannes and DataType
      */
-    static std::pair<Endianness, DType> processDescrField(const std::string& headerStr);
+    static std::pair<Endianness, DType> processDescrField(const std::string &header_str);
 };
 
-} // namespace numpy
+}  // namespace io::numpy
 
-#endif // NUMPYREADER_H
+#endif  // __IO_NUMPY_READER_H_

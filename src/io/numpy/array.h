@@ -1,9 +1,8 @@
 //
 // Created by Diego Aguirre on 3/12/20.
 //
-
-#ifndef ARRAY_H
-#define ARRAY_H
+#ifndef __IO_NUMPY_ARRAY_H_
+#define __IO_NUMPY_ARRAY_H_
 
 #include <unsupported/Eigen/CXX11/Tensor>
 
@@ -15,7 +14,7 @@
 // #pragma GCC diagnostic pop
 
 
-namespace numpy
+namespace io::numpy
 {
 
 /*!
@@ -55,4 +54,4 @@ using Index = Eigen::Index;
 
 }
 
-#endif //ARRAY_H
+#endif // __IO_NUMPY_ARRAY_H_
