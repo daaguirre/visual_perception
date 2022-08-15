@@ -15,11 +15,11 @@ int main(int, char**) {
 
     io::numpy::Array<double, 2> x2;
     io::numpy::ArrayIO::deserialize(dataX2FilePath, x2);
-    Eigen::MatrixXd x2Matrix = vp::numpyArrayToMatrix<double, 2>(x2, x2.dimension(0), x2.dimension(1));
+    Eigen::MatrixXd x2Matrix = vp::numpyArrayToMatrix<double, 2>(x2);
 
     io::numpy::Array<double, 2> x1;
     io::numpy::ArrayIO::deserialize(dataX1FilePath, x1);
-    Eigen::MatrixXd x1Matrix = vp::numpyArrayToMatrix<double, 2>(x1, x1.dimension(0), x1.dimension(1));
+    Eigen::MatrixXd x1Matrix = vp::numpyArrayToMatrix<double, 2>(x1);
 
     std::cout << "Input data read!!\n";
 

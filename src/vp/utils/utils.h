@@ -16,9 +16,12 @@ using MatrixType = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
 
 template <typename T, int Dims>
 MatrixType<T> numpyArrayToMatrix(const io::numpy::Array<T, Dims> &numpyArray,
-                                 const Eigen::Index rows, const Eigen::Index cols)
+                                 size_t rows_index = 0,
+                                 size_t columns_index = 1)
 {
-    return Eigen::Map<const MatrixType<T>>(numpyArray.data(), rows, cols);
+    return Eigen::Map<const MatrixType<T>>(numpyArray.data(), 
+                                           numpyArray.dimension(rows_index),
+                                           numpyArray.dimension(columns_index));
 }
 
 }  // namespace vp

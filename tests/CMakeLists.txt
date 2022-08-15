@@ -16,6 +16,10 @@ SET(${appName}_sources
     test_base.cpp
     fixtures/vp/fundamental_matrix_estimator_test.h
     fixtures/vp/fundamental_matrix_estimator_test.cpp
+    fixtures/vp/essential_matrix_estimator_test.h
+    fixtures/vp/essential_matrix_estimator_test.cpp
+    fixtures/vp/point_triangulator_test.h
+    fixtures/vp/point_triangulator_test.cpp
 )
 
 add_executable(${appName} ${${appName}_sources})
