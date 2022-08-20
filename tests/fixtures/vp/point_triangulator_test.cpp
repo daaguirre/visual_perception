@@ -3,6 +3,7 @@
 #include "point_triangulator_test.h"
 
 #include <io/numpy/array_io.h>
+#include <io/bin/vector_io.h>
 #include <vp/point_triangulator.h>
 #include <vp/utils/utils.h>
 
@@ -56,5 +57,18 @@ TEST_F(PointTriangulatorTest, shouldObtainTriangulation)
 
     vp::PointTriangulator triangulator;
     Eigen::MatrixXd points = triangulator.run(K, C1, R1, C2, R2, x1, x2);
-    std::cout << "Done!\n";  
+    std::cout << "Done!\n";
+    std::cout << points.rows()<< "\n";
+    std::cout << points.cols()<< "\n";
+
+    // for(size_t i = 0; i < 5; ++i)
+    // {
+    //     std::cout << points.row(i)<< "\n";
+    // }
+
+    // std::vector<double> v(&points(0), points.data()+points.cols()*points.rows());
+
+    // io::bin::VectorIO::serializeVector(v, "/home/diego/dev/VisualPerception/main/tests/resources/world_points.bin");
+    // std::cout << "points serialized!\n";
+
 }

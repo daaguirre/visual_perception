@@ -11,6 +11,7 @@ set(${libName}_sources
         io/numpy/reader.cpp
         io/numpy/str_array.h
         vp/types.h
+        vp/types.cpp
         vp/utils/utils.h
         vp/fundamental_matrix_estimator.h
         vp/fundamental_matrix_estimator.cpp
@@ -18,8 +19,11 @@ set(${libName}_sources
         vp/essential_matrix_estimator.cpp
         vp/point_triangulator.h
         vp/point_triangulator.cpp
-
+        vp/pnp_algorithm.h
+        vp/pnp_algorithm.cpp
 )
+
+generate_cpp_sources(${${libName}_sources})
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 

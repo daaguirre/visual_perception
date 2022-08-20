@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-namespace bin
+namespace io::bin
 {
 
 class VectorIO
@@ -18,7 +18,7 @@ public:
      * \return result
      */
     template <typename T>
-    static bool serializeVector(const std::vector<T> &data, const std::string file_path)
+    static bool serializeVector(const std::vector<T> &data, const std::string& file_path)
     {
         std::ofstream file(file_path, std::ios::binary);
         file.write((char *)&data[0], data.size() * sizeof(T));
@@ -33,7 +33,7 @@ public:
      * \return deserialized vector
      */
     template <typename T>
-    static std::vector<T> deserializeVector(const std::string file_path)
+    static std::vector<T> deserializeVector(const std::string& file_path)
     {
         std::ifstream file(file_path, std::ios::binary);
         file.seekg(0, std::ios::end);  // go to end of file

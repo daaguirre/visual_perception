@@ -20,7 +20,11 @@ SET(${appName}_sources
     fixtures/vp/essential_matrix_estimator_test.cpp
     fixtures/vp/point_triangulator_test.h
     fixtures/vp/point_triangulator_test.cpp
+    fixtures/vp/pnp_algorithm_test.h
+    fixtures/vp/pnp_algorithm_test.cpp
 )
+
+generate_cpp_sources(FILES ${${appName}_sources})
 
 add_executable(${appName} ${${appName}_sources})
 

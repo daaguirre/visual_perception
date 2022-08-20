@@ -20,9 +20,9 @@ def main():
     with open("data_x1.npy", 'wb') as f:
         np.save(f, x1)    
     with open("data_x2.npy", 'wb') as f:
-        np.save(f, x1)    
+        np.save(f, x2)    
     with open("data_x3.npy", 'wb') as f:
-        np.save(f, x1)    
+        np.save(f, x3)    
 
 
 if __name__ == "__main__":
