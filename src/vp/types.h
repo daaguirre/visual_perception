@@ -12,6 +12,7 @@ using TransformationMat = Eigen::Matrix3d;
 template <size_t Dims>
 using Vector = Eigen::Matrix<double, Dims, 1>;
 
+using VectorX = Eigen::Matrix<double, -1, 1>;
 using Vector2d = Vector<2>;
 using Vector3d = Vector<3>;
 using Vector4d = Vector<4>;

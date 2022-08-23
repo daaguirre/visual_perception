@@ -11,8 +11,8 @@ set(${libName}_sources
         io/numpy/reader.cpp
         io/numpy/str_array.h
         vp/types.h
-        vp/types.cpp
         vp/utils/utils.h
+        vp/utils/utils.cpp
         vp/fundamental_matrix_estimator.h
         vp/fundamental_matrix_estimator.cpp
         vp/essential_matrix_estimator.h

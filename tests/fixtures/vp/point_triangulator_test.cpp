@@ -57,9 +57,16 @@ TEST_F(PointTriangulatorTest, shouldObtainTriangulation)
 
     vp::PointTriangulator triangulator;
     Eigen::MatrixXd points = triangulator.run(K, C1, R1, C2, R2, x1, x2);
-    std::cout << "Done!\n";
-    std::cout << points.rows()<< "\n";
-    std::cout << points.cols()<< "\n";
+
+    ASSERT_EQ(429, points.rows());
+    ASSERT_EQ(4, points.cols());
+    
+    const std::string world_points_file_path = (RESOURCES_DIR / "world_points.bin").string();
+    std::vector<double> world_points = io::bin::VectorIO::deserializeVector<double>(world_points_file_path); 
+    auto world_points_mat = Eigen::Map<Eigen::Matrix<double, 429, 4>>(world_points.data());
+
+    bool equal = world_points_mat.isApprox(points, PRECISION);
+    ASSERT_TRUE(equal); 
 
     // for(size_t i = 0; i < 5; ++i)
     // {

@@ -34,21 +34,13 @@ HVector<Dims> to_homogeneous_vector(const Vector<Dims>& vector)
 }
 
 /**
- * @brief converts 2D vector into a skew symmetric matrix
+ * @brief converts any vector into a skew symmetric matrix
  * 
  * @param v input 2D vector 
  * @return Matrix3d 
  */
-Matrix3d vector_to_skew(const Vector2d& v);
+Matrix3d vector_to_skew(const VectorX& v);
 
-
-/**
- * @brief converts 3d vector into a skew symmetric matrix
- * 
- * @param v input 3d vector
- * @return Matrix3d 
- */
-Matrix3d vector_to_skew(const Vector3d& v);
 
 }  // namespace vp
 

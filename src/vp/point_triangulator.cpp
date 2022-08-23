@@ -1,17 +1,9 @@
 #include "point_triangulator.h"
 
+#include "utils/utils.h"
+
 namespace vp
 {
-
-Eigen::Matrix3d PointTriangulator::vector_to_skew(const Eigen::Vector2d& v) const
-{
-    Eigen::Matrix3d skew_matrix;
-    skew_matrix << 0, -1, v(1), 
-                   1, 0, -v(0), 
-                   -v(1), v(0), 0;
-    return skew_matrix;
-}
-
 
 Eigen::MatrixXd PointTriangulator::run(const Eigen::Matrix3d& K, const Eigen::Vector3d& c1,
                                        const Eigen::Matrix3d& R1, const Eigen::Vector3d& c2,
@@ -20,8 +12,8 @@ Eigen::MatrixXd PointTriangulator::run(const Eigen::Matrix3d& K, const Eigen::Ve
 {
     Eigen::Vector3d t1 = -R1 * c1;
     Eigen::Vector3d t2 = -R2 * c2;
-    
-    Eigen::MatrixXd P1(R1.rows(), R1.cols()+1);
+
+    Eigen::MatrixXd P1(R1.rows(), R1.cols() + 1);
     P1 << R1, t1;
     P1 = K * P1;
 
@@ -41,7 +33,7 @@ Eigen::MatrixXd PointTriangulator::run(const Eigen::Matrix3d& K, const Eigen::Ve
         a << p1, p2;
         Eigen::BDCSVD<Eigen::MatrixXd> svd(a, Eigen::ComputeThinU | Eigen::ComputeThinV);
         const Eigen::MatrixXd& V = svd.matrixV();
-        Eigen::Vector4d point = V.col(V.cols()-1);
+        Eigen::Vector4d point = V.col(V.cols() - 1);
         point /= point(3);
         points_3d.row(i) = point;
     }

@@ -3,6 +3,8 @@
 
 #include <Eigen/Eigen>
 
+#include "types.h"
+
 namespace vp
 {
 
@@ -13,9 +15,6 @@ public:
                         const Eigen::Matrix3d& R1, const Eigen::Vector3d& c2,
                         const Eigen::Matrix3d& R2, const Eigen::MatrixXd& x1,
                         const Eigen::MatrixXd& x2) const;
-
-private:
-    Eigen::Matrix3d vector_to_skew(const Eigen::Vector2d& vector) const;
 
 };
 
