@@ -18,11 +18,11 @@ def main():
     img2 = data_struct[7]
     img3 = data_struct[8]
     with open("data_x1.npy", 'wb') as f:
-        np.save(f, x1)    
+        np.save(f, np.transpose(x1))    
     with open("data_x2.npy", 'wb') as f:
-        np.save(f, x2)    
+        np.save(f, np.transpose(x2))    
     with open("data_x3.npy", 'wb') as f:
-        np.save(f, x3)    
+        np.save(f, np.transpose(x3))    
 
 
 if __name__ == "__main__":

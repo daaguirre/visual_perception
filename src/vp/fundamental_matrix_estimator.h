@@ -13,11 +13,10 @@ class FundamentalMatrixEstimator
 public:
     FundamentalMatrixEstimator();
 
-    Matrix33 estimate(const Eigen::MatrixXd& x1, const Eigen::MatrixXd& x2) const;
+    Matrix33 estimate(const Matrix3X& x1, const Matrix3X& x2) const;
 
 private:
-    std::unique_ptr<Eigen::MatrixXd> buildMatrixA(const Eigen::MatrixXd& x1,
-                                                  const Eigen::MatrixXd& x2) const;
+    std::unique_ptr<MatrixX> build_matrix_A(const Matrix3X& x1, const Matrix3X& x2) const;
 };
 
 }  // namespace vp

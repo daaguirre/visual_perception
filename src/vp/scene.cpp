@@ -11,13 +11,13 @@ vp::Scene::Scene() {}
 
 Scene& vp::Scene::add_view(View::ConstPtr view_ptr, ConstPtr<Matrix3X> keypoints)
 {
-    if (std::find(m_views.begin(), m_views.end(), view_ptr) == m_views.end())
-    {
-        throw std::invalid_argument("View already exists.");
-    }
-
     if (m_views.size() > 0)
     {
+        if (std::find(m_views.begin(), m_views.end(), view_ptr) != m_views.end())
+        {
+            throw std::invalid_argument("View already exists.");
+        }
+
         bool equal = m_correspondences.back()->cols() == keypoints->cols();
         if (!equal)
         {

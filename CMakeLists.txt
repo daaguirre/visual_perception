@@ -18,18 +18,7 @@ include(${CMAKE_SRC}/file.cmake)
 enable_testing()
 add_subdirectory(src)
 add_subdirectory(tests)
-
-# APPS
-SET(appName robotics_perception)
-SET(${appName}_sources
-        main.cpp
-)
-add_executable(${appName} ${${appName}_sources})
-
-target_link_libraries(${appName} 
-    VisualPerception
-)
-
+add_subdirectory(apps)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

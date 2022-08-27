@@ -7,24 +7,30 @@
 
 #include <filesystem>
 
-TEST_F(PNPAlgorithmTest, shouldObtainCameraPose)
+TEST_F(PNPAlgorithmTest, should_obtain_camera_pose)
 {
-    const std::string data_x3_file_path = (RESOURCES_DIR / "data_x3.npy").string();
+    std::string data_x3_file_path = (RESOURCES_DIR / "data_x3.npy").string();
     io::numpy::Array<double, 2> np_x3;
     io::numpy::ArrayIO::deserialize(data_x3_file_path, np_x3);
-    Eigen::MatrixXd x3 = vp::numpy_array_to_matrix<double, 2>(np_x3);
+    vp::MatrixX x3 = vp::numpy_array_to_matrix<double, 2>(np_x3);
+    x3.transposeInPlace();
+    x3.conservativeResize(x3.rows() + 1, Eigen::NoChange);
+    x3.row(2).setOnes();
 
-    const std::string data_K_file_path = (RESOURCES_DIR / "data_K.npy").string();
+    std::string data_K_file_path = (RESOURCES_DIR / "data_K.npy").string();
     io::numpy::Array<double, 2> np_K;  // numpy array K
     io::numpy::ArrayIO::deserialize(data_K_file_path, np_K);
-    Eigen::MatrixXd K = vp::numpy_array_to_matrix<double, 2>(np_K);
+    vp::MatrixX K = vp::numpy_array_to_matrix<double, 2>(np_K);
 
     const std::string world_points_file_path = (RESOURCES_DIR / "world_points.bin").string();
-    std::vector<double> world_points = io::bin::VectorIO::deserializeVector<double>(world_points_file_path); 
-    auto world_points_mat = Eigen::Map<Eigen::Matrix<double, 429, 4>>(world_points.data());
+    std::vector<double> world_points_vector =
+        io::bin::VectorIO::deserializeVector<double>(world_points_file_path);
+    vp::Matrix<429, 4> world_points =
+        Eigen::Map<const vp::Matrix<429, 4>>(world_points_vector.data(), 429, 4);
+    vp::Matrix<4, 429> points = world_points.transpose();
 
     vp::PNPAlgorithm pnp;
-    vp::CameraPose camera_pose = pnp.run(world_points_mat, x3, K);
+    vp::CameraPose camera_pose = pnp.run(points, x3, K);
 
     std::cout << "PNP algorithm runned!\n";
     std::cout << "Matrix:\n";

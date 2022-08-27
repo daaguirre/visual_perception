@@ -17,10 +17,11 @@ Matrix4X PointTriangulator::run(const std::vector<View::ConstPtr>& views,
         {
             const Vector3& pixel = correspondences[view_idx]->col(point_idx);
             Matrix33 skew_mat = vector_to_skew(pixel);
-            MatrixX p1 = skew_mat * views[view_idx]->get_P();
-            a.block<3, 4>(view_idx*3, 0) = p1;
+            MatrixX p = skew_mat * views[view_idx]->get_P();
+            a.block<3, 4>(view_idx*3, 0) = p;
         }
-        Eigen::BDCSVD<Eigen::MatrixXd> svd(a, Eigen::ComputeThinU | Eigen::ComputeThinV);
+        
+        Eigen::BDCSVD<Eigen::MatrixXd> svd(a, Eigen::ComputeFullV);
         const MatrixX& V = svd.matrixV();
         Vector4 point = V.col(V.cols() - 1);
         point /= point(3);
