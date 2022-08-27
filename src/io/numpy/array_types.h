@@ -2,12 +2,12 @@
 // Created by Diego Aguirre on 18/11/20.
 //
 
-
 #ifndef __IO_NUMPY_ARRAY_TYPES_H_
 #define __IO_NUMPY_ARRAY_TYPES_H_
 
-#include <stdexcept>
 #include <exception>
+#include <limits>
+#include <stdexcept>
 
 namespace io::numpy
 {
@@ -39,13 +39,13 @@ struct DType
      */
     bool match(const DType& other) const
     {
-        if(type != other.type)
+        if (type != other.type)
         {
             return false;
         }
 
-        //for type string the bytes field can be different
-        if(type != DataType::UNICODE_STR)
+        // for type string the bytes field can be different
+        if (type != DataType::UNICODE_STR)
         {
             return bytes == other.bytes;
         }
@@ -58,10 +58,10 @@ struct DType
  * Numpy _data type strings
  */
 const std::map<DataType, char> DATA_TYPE_TO_STR = {
-        {DataType::U, 'u'},
-        {DataType::I, 'i'},
-        {DataType::F, 'f'},
-        {DataType::UNICODE_STR, 'U'},
+    {DataType::U, 'u'},
+    {DataType::I, 'i'},
+    {DataType::F, 'f'},
+    {DataType::UNICODE_STR, 'U'},
 };
 
 /*!
@@ -69,126 +69,87 @@ const std::map<DataType, char> DATA_TYPE_TO_STR = {
  * be possible the decodification and codification of the numpy _data
  * @tparam T C++ type
  */
-template<typename T>
+template <typename T>
 struct ArrayType
 {
     /*!
      * @return the corresponding Numpy DataType for the T type
      */
-    static DType value()
-    {
-        throw std::runtime_error("Data type not supported");
-    }
+    static DType value() { throw std::runtime_error("Data type not supported"); }
 };
 
-template<>
+template <>
 struct ArrayType<unsigned char>
 {
-    static DType value()
-    {
-        return {DataType::U, 1};
-    }
+    static DType value() { return {DataType::U, 1}; }
 };
 
-template<>
+template <>
 struct ArrayType<char>
 {
-    static DType value()
-    {
-        return {DataType::I, 1};
-    }
+    static DType value() { return {DataType::I, 1}; }
 };
 
-template<>
+template <>
 struct ArrayType<unsigned short>
 {
-    static DType value()
-    {
-        return {DataType::U, 2};
-    }
+    static DType value() { return {DataType::U, 2}; }
 };
 
-template<>
+template <>
 struct ArrayType<short>
 {
-    static DType value()
-    {
-        return {DataType::I, 2};
-    }
+    static DType value() { return {DataType::I, 2}; }
 };
 
-template<>
+template <>
 struct ArrayType<unsigned int>
 {
-    static DType value()
-    {
-        return {DataType::U, 4};
-    }
+    static DType value() { return {DataType::U, 4}; }
 };
 
-template<>
+template <>
 struct ArrayType<int>
 {
-    static DType value()
-    {
-        return {DataType::I, 4};
-    }
+    static DType value() { return {DataType::I, 4}; }
 };
 
-template<>
+template <>
 struct ArrayType<float>
 {
-    static DType value()
-    {
-        return {DataType::F, 4};
-    }
+    static DType value() { return {DataType::F, 4}; }
 };
 
-template<>
+template <>
 struct ArrayType<unsigned long>
 {
-    static DType value()
-    {
-        return {DataType::U, 8};
-    }
+    static DType value() { return {DataType::U, 8}; }
 };
 
-template<>
+template <>
 struct ArrayType<long>
 {
-    static DType value()
-    {
-        return {DataType::I, 8};
-    }
+    static DType value() { return {DataType::I, 8}; }
 };
 
-template<>
+template <>
 struct ArrayType<double>
 {
-    static DType value()
-    {
-        return {DataType::F, 8};
-    }
+    static DType value() { return {DataType::F, 8}; }
 };
 
-template<>
+template <>
 struct ArrayType<std::string>
 {
-    static DType value()
-    {
-        return {DataType::UNICODE_STR, std::numeric_limits<size_t>::max()};
-    }
+    static DType value() { return {DataType::UNICODE_STR, std::numeric_limits<size_t>::max()}; }
 };
 
-template<>
+template <>
 struct ArrayType<std::wstring>
 {
-    static DType value()
-    {
-        return {DataType::UNICODE_STR, std::numeric_limits<size_t>::max()};
-    }
+    static DType value() { return {DataType::UNICODE_STR, std::numeric_limits<size_t>::max()}; }
 };
 
-}
+}  // namespace io::numpy
 
-#endif // __IO_NUMPY_ARRAY_TYPES_H_
+#endif  // __IO_NUMPY_ARRAY_TYPES_H_

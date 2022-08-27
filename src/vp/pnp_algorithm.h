@@ -22,7 +22,7 @@ class PNPAlgorithm
 public:
     CameraPose run(const Eigen::MatrixXd& world_points,
                    const Eigen::MatrixXd& pixels,
-                   const Matrix3d& K);
+                   const Matrix33& K);
 
 private:
 
@@ -33,7 +33,7 @@ private:
      * @param pixels pixel values
      * @return Matrix 
      */
-    Matrix factor_out_intrinsic_parameters(const Matrix3d& K, const Matrix& pixels);
+    MatrixX factor_out_intrinsic_parameters(const Matrix33& K, const Matrix<>& pixels);
     
 };
 

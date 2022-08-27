@@ -26,9 +26,9 @@ MatrixType<T> numpyArrayToMatrix(const io::numpy::Array<T, Dims>& numpyArray, si
 
 
 template<size_t Dims>
-HVector<Dims> to_homogeneous_vector(const Vector<Dims>& vector)
+Vector<Dims+1> to_homogeneous_vector(const Vector<Dims>& vector)
 {
-    HVector<Dims> hvector = HVector<Dims>::Ones();
+    Vector<Dims+1> hvector = Vector<Dims+1>::Ones();
     hvector << vector;
     return hvector;
 }
@@ -39,7 +39,7 @@ HVector<Dims> to_homogeneous_vector(const Vector<Dims>& vector)
  * @param v input 2D vector 
  * @return Matrix3d 
  */
-Matrix3d vector_to_skew(const VectorX& v);
+Matrix33 vector_to_skew(const VectorX& v);
 
 
 }  // namespace vp

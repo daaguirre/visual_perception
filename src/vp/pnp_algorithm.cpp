@@ -6,7 +6,7 @@ namespace vp
 
 CameraPose PNPAlgorithm::run(const Eigen::MatrixXd& world_points,
                              const Eigen::MatrixXd& pixels,
-                             const Matrix3d& K)
+                             const Matrix33& K)
 {
     Eigen::MatrixXd img_points = factor_out_intrinsic_parameters(K, pixels);
     auto h_zero = Eigen::Matrix<double, 1, 4>::Zero(); 
@@ -34,7 +34,7 @@ CameraPose PNPAlgorithm::run(const Eigen::MatrixXd& world_points,
     Eigen::BDCSVD<Eigen::MatrixXd> svd2(camera_pose_mat.leftCols(3), Eigen::ComputeFullU | Eigen::ComputeFullV);
     const Eigen::MatrixXd& V2 = svd2.matrixV();
     const Eigen::MatrixXd& U2 = svd2.matrixU();
-    Matrix R = U2 * V2.transpose();
+    Matrix<> R = U2 * V2.transpose();
     double det_R = R.determinant();
     Vector3d tc = det_R * (t / svd2.singularValues()(0));
 
@@ -42,13 +42,13 @@ CameraPose PNPAlgorithm::run(const Eigen::MatrixXd& world_points,
     return camera_pose;
 }
 
-Matrix vp::PNPAlgorithm::factor_out_intrinsic_parameters(const Matrix3d& K, const Matrix& pixels) 
+Matrix<> vp::PNPAlgorithm::factor_out_intrinsic_parameters(const Matrix33& K, const Matrix<>& pixels) 
 {
-    Matrix h_pixels(pixels.rows(), 3);
+    Matrix<> h_pixels(pixels.rows(), 3);
     h_pixels.setOnes();
     h_pixels.leftCols(2) = pixels;
     h_pixels.transposeInPlace();
-    Matrix img_points = K.inverse() *  h_pixels;
+    Matrix<> img_points = K.inverse() *  h_pixels;
     return img_points;
 }
 

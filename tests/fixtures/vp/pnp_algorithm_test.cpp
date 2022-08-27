@@ -9,7 +9,6 @@
 
 TEST_F(PNPAlgorithmTest, shouldObtainCameraPose)
 {
-
     const std::string data_x3_file_path = (RESOURCES_DIR / "data_x3.npy").string();
     io::numpy::Array<double, 2> np_x3;
     io::numpy::ArrayIO::deserialize(data_x3_file_path, np_x3);

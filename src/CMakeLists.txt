@@ -21,9 +21,13 @@ set(${libName}_sources
         vp/point_triangulator.cpp
         vp/pnp_algorithm.h
         vp/pnp_algorithm.cpp
+        vp/view.h
+        vp/view.cpp
+        vp/scene.h
+        vp/scene.cpp
 )
 
-generate_cpp_sources(${${libName}_sources})
+generate_cpp_sources(FILES ${${libName}_sources})
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 

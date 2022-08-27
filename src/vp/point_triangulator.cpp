@@ -40,4 +40,59 @@ Eigen::MatrixXd PointTriangulator::run(const Eigen::Matrix3d& K, const Eigen::Ve
     return points_3d;
 }
 
+Matrix4X vp::PointTriangulator::run_non_linear(
+    const std::vector<View::ConstPtr>& views,
+    const std::vector<ConstPtr<Matrix3X>>& correspondences, const Matrix4X& points)
+{
+    const size_t num_points = points.cols();
+    Matrix4X opt_points(points.rows(), points.cols());
+    for (size_t i = 0; i < num_points; ++i)
+    {
+        opt_points.col(i) = run_single_point_non_linear(i, views, correspondences, points);
+    }
+    return opt_points;
+}
+
+Vector4d vp::PointTriangulator::run_single_point_non_linear(
+    size_t point_index, const std::vector<View::ConstPtr>& views,
+    const std::vector<ConstPtr<Matrix3X>>& correspondences, const Matrix4X& points)
+{
+    VectorX b(views.size() * 2);
+    VectorX f(b.rows());
+    MatrixX J(views.size() * 2, 3);
+    for (size_t i = 0; i < views.size(); ++i)
+    {
+        const View& view = *views[i];
+        b.block<2, 1>(i * 2, 0) = correspondences[i]->col(point_index).topRows(2);
+        Vector3d reprojection = view.get_P() * points.col(point_index);
+        const double u = reprojection(0);
+        const double v = reprojection(1);
+        const double w = reprojection(2);
+        const double w2 = w * w;
+        reprojection = reprojection / w;
+        f.block<2, 1>(i * 2, 0) = reprojection.topRows(2);
+        auto K = view.get_K();
+        auto R = view.get_camera_pose().R();
+        Matrix33 p = K * R;
+        const Vector3d& du_dx = p.row(0);
+        const Vector3d& dv_dx = p.row(1);
+        const Vector3d& dw_dx = p.row(2);
+        Vector3d df_dx0 = (w * du_dx - u * dw_dx) / w2;
+        Vector3d df_dx1 = (w * dv_dx - v * dw_dx) / w2;
+        J.row(i * 2) = df_dx0.transpose();
+        J.row(i * 2 + 1) = df_dx1.transpose();
+    }
+
+    MatrixX j_tilde = (J.transpose() * J).inverse() * J.transpose();
+    MatrixX delta_x = j_tilde * (b - f);
+    const size_t num_its = 1;
+    Vector4d opt_point = Vector4d::Ones();
+    for (size_t i = 0; i < num_its; ++i)
+    {
+        opt_point.topRows(3) = points.col(point_index).topRows(3) + delta_x;
+    }
+
+    return opt_point;
+}
+
 }  // namespace vp
