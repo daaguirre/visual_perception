@@ -6,7 +6,7 @@ namespace vp
 Matrix33 vector_to_skew(const VectorX& v)
 {
     size_t rows_to_copy = v.rows() > 3? 3: v.rows();
-    Vector3d tmp_v = Vector3d::Ones();
+    Vector3 tmp_v = Vector3::Ones();
     tmp_v.topRows(rows_to_copy) = v.topRows(rows_to_copy);  
 
     Matrix33 skew_matrix;

@@ -15,7 +15,7 @@ CameraPose PNPAlgorithm::run(const Eigen::MatrixXd& world_points,
     
     for(size_t i = 0; i < world_points.rows(); ++i)
     {
-        const Vector3d& img_point = img_points.col(i);
+        const Vector3& img_point = img_points.col(i);
         const Eigen::Matrix<double, 1, 4>& h_world_point = world_points.row(i);
         Eigen::Matrix<double, 1, 4> u_world_point = img_point(0) * h_world_point; 
         Eigen::Matrix<double, 1, 4> v_world_point = img_point(1) * h_world_point; 
@@ -29,14 +29,14 @@ CameraPose PNPAlgorithm::run(const Eigen::MatrixXd& world_points,
     Eigen::BDCSVD<Eigen::MatrixXd> svd(A, Eigen::ComputeFullV);
     const Eigen::MatrixXd& V = svd.matrixV();
     auto camera_pose_mat = Eigen::Map<const Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(V.col(11).data());
-    const Vector3d& t = camera_pose_mat.col(3);
+    const Vector3& t = camera_pose_mat.col(3);
     
     Eigen::BDCSVD<Eigen::MatrixXd> svd2(camera_pose_mat.leftCols(3), Eigen::ComputeFullU | Eigen::ComputeFullV);
     const Eigen::MatrixXd& V2 = svd2.matrixV();
     const Eigen::MatrixXd& U2 = svd2.matrixU();
     Matrix<> R = U2 * V2.transpose();
     double det_R = R.determinant();
-    Vector3d tc = det_R * (t / svd2.singularValues()(0));
+    Vector3 tc = det_R * (t / svd2.singularValues()(0));
 
     CameraPose camera_pose(R, tc);
     return camera_pose;

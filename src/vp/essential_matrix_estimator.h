@@ -5,23 +5,23 @@
 #include <cstring>
 #include <utility>
 
+#include "types.h"
+
 namespace vp
 {
 
 class EssentialMatrixEstimator
 {
 public:
-
     /**
      * @brief estimates the essential matrix E from the fundamental matrix (F) as follows
      * E = K'FK
-     * 
-     * @param f fundamental matrix 3x3 
+     *
+     * @param f fundamental matrix 3x3
      * @param k camera intrinsic parameter cmatrix 3x3
-     * @return Eigen::Matrix3d 3x3 essential matrix with singular values (1, 1, 0) rank 2
+     * @return Matrix33 3x3 essential matrix with singular values (1, 1, 0) rank 2
      */
-    Eigen::Matrix3d estimateFromFundamentalMatrix(const Eigen::Matrix3d& f,
-                                                  const Eigen::Matrix3d& k) const;
+    Matrix33 estimateFromFundamentalMatrix(const Matrix33& f, const Matrix33& k) const;
 };
 
 }  // namespace vp

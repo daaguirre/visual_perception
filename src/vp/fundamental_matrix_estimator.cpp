@@ -10,7 +10,7 @@ FundamentalMatrixEstimator::FundamentalMatrixEstimator()
 
 }
 
-Eigen::Matrix3d FundamentalMatrixEstimator::estimate(const Eigen::MatrixXd& x1, const Eigen::MatrixXd& x2) const
+Matrix33 FundamentalMatrixEstimator::estimate(const Eigen::MatrixXd& x1, const Eigen::MatrixXd& x2) const
 {
     std::unique_ptr<Eigen::MatrixXd> A_ptr = buildMatrixA(x1, x2);
     Eigen::BDCSVD<Eigen::MatrixXd> svd1(*A_ptr, Eigen::ComputeThinU | Eigen::ComputeThinV);
@@ -19,9 +19,9 @@ Eigen::Matrix3d FundamentalMatrixEstimator::estimate(const Eigen::MatrixXd& x1, 
     
     // apply SVD again to make sure final matrix will be of rank 2
     Eigen::BDCSVD<Eigen::MatrixXd> svd2(full_rank_F, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    Eigen::Matrix3d diagonal_matrix(svd2.singularValues().asDiagonal());
+    Matrix33 diagonal_matrix(svd2.singularValues().asDiagonal());
     diagonal_matrix(2, 2) = 0;
-    Eigen::Matrix3d F = svd2.matrixU() * diagonal_matrix * svd2.matrixV().transpose();
+    Matrix33 F = svd2.matrixU() * diagonal_matrix * svd2.matrixV().transpose();
     F.normalize();
     return F;
 }

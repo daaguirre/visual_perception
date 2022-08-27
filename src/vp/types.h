@@ -25,9 +25,9 @@ using VectorX = Matrix<-1, 1>;
 
 template <size_t Dims>
 using Vector = Matrix<Dims, 1>;
-using Vector2d = Vector<2>;
-using Vector3d = Vector<3>;
-using Vector4d = Vector<4>;
+using Vector2 = Vector<2>;
+using Vector3 = Vector<3>;
+using Vector4 = Vector<4>;
 
 struct CameraPose
 {
@@ -38,7 +38,7 @@ struct CameraPose
 
     CameraPose() : mat(MatType::Identity()) {}
 
-    CameraPose(const Matrix33& r, const Vector3d& t)
+    CameraPose(const Matrix33& r, const Vector3& t)
     {
         mat.block<3, 3>(0, 0) = r;
         mat.col(3) = t;
@@ -46,9 +46,9 @@ struct CameraPose
 
     Eigen::Map<const Matrix33> R() const { return Eigen::Map<const Matrix33>(&mat(0)); }
 
-    Eigen::Ref<const Vector3d> t() const { return mat.col(3); }
+    Eigen::Ref<const Vector3> t() const { return mat.col(3); }
 
-    Vector3d C() const { return -R().transpose() * t(); }
+    Vector3 C() const { return -R().transpose() * t(); }
 };
 
 }  // namespace vp

@@ -12,12 +12,12 @@ TEST_F(PNPAlgorithmTest, shouldObtainCameraPose)
     const std::string data_x3_file_path = (RESOURCES_DIR / "data_x3.npy").string();
     io::numpy::Array<double, 2> np_x3;
     io::numpy::ArrayIO::deserialize(data_x3_file_path, np_x3);
-    Eigen::MatrixXd x3 = vp::numpyArrayToMatrix<double, 2>(np_x3);
+    Eigen::MatrixXd x3 = vp::numpy_array_to_matrix<double, 2>(np_x3);
 
     const std::string data_K_file_path = (RESOURCES_DIR / "data_K.npy").string();
     io::numpy::Array<double, 2> np_K;  // numpy array K
     io::numpy::ArrayIO::deserialize(data_K_file_path, np_K);
-    Eigen::MatrixXd K = vp::numpyArrayToMatrix<double, 2>(np_K);
+    Eigen::MatrixXd K = vp::numpy_array_to_matrix<double, 2>(np_K);
 
     const std::string world_points_file_path = (RESOURCES_DIR / "world_points.bin").string();
     std::vector<double> world_points = io::bin::VectorIO::deserializeVector<double>(world_points_file_path); 
