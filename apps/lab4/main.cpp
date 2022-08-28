@@ -114,7 +114,7 @@ void run_sfm_scene(const LabData& lab_data)
 
     const vp::Matrix4X& points = scene.get_points();
     // print first 10 points as row vectors
-    std::cout << "Points linear triangulation: \n" << points.transpose().block<10, 4>(0, 0) << "\n\n";
+    std::cout << "Points linear triangulation: \n" << points.block<3, 10>(0, 0).transpose() << "\n\n";
 
     vp::PNPAlgorithm pnp;
     vp::CameraPose camera_pose3 = pnp.run(points, *lab_data.x3, lab_data.K);
@@ -126,5 +126,5 @@ void run_sfm_scene(const LabData& lab_data)
          .optimize_points();
 
     // print first 10 points as row vectors
-    std::cout << "Final points: \n" << points.transpose().block<10, 4>(0, 0) << "\n\n";
+    std::cout << "Final points: \n" << points.block<3, 10>(0, 0).transpose() << "\n\n";
 }
