@@ -10,6 +10,7 @@
 #include <vp/view.h>
 
 #include <filesystem>
+#include <chrono>
 
 namespace fs = std::filesystem;
 
@@ -162,7 +163,12 @@ TEST_F(PointTriangulatorTest, should_obtain_non_linear_triangulation)
                                                                std::make_shared<vp::Matrix3X>(x3)};
 
     vp::PointTriangulator triangulator;
+
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     vp::Matrix<4, 429> opt_points = triangulator.run_non_linear(views, correspondences, points);
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
+
 
     // std::vector<double> v(&opt_points(0), opt_points.data()+opt_points.cols()*opt_points.rows());
     // io::bin::VectorIO::serializeVector(v,

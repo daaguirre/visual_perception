@@ -64,6 +64,8 @@ public:
      */
     const Matrix4X& get_points() const;
 
+    const Scene& visualize_scene() const;
+
 private:
     std::vector<View::ConstPtr> m_views;
     std::vector<ConstPtr<Matrix3X>> m_correspondences;

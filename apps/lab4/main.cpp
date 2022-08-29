@@ -1,6 +1,8 @@
 #include <Eigen/Eigen>
 #include <filesystem>
 #include <iostream>
+#include <opencv2/core/eigen.hpp>
+#include <opencv2/opencv.hpp>
 
 #include "io/numpy/array_io.h"
 #include "vp/essential_matrix_estimator.h"
@@ -9,6 +11,7 @@
 #include "vp/scene.h"
 #include "vp/types.h"
 #include "vp/utils/utils.h"
+
 
 namespace fs = std::filesystem;
 
@@ -22,6 +25,9 @@ struct LabData
     vp::ConstPtr<vp::Matrix3X> x1;
     vp::ConstPtr<vp::Matrix3X> x2;
     vp::ConstPtr<vp::Matrix3X> x3;
+    cv::Mat img1;
+    cv::Mat img2;
+    cv::Mat img3;
 };
 
 // forward declarations
@@ -29,6 +35,7 @@ LabData load_data();
 vp::Matrix33 estimate_fundamental_matrix(const LabData& lab_data);
 void estimate_essential_matrix(const vp::Matrix33& fundamental_matrix, const vp::Matrix33& K);
 void run_sfm_scene(const LabData& lab_data);
+
 
 int main(int, char**)
 {
@@ -78,6 +85,13 @@ LabData load_data()
     lab_data.C2 = vp::numpy_array_to_matrix<double, 2>(np_C);
     std::cout << "C2:\n" << lab_data.C2 << "\n";
 
+    std::string img1_path = (lab_data_dir_path / "img1.png").string();
+    lab_data.img1 = cv::imread(img1_path);
+    std::string img2_path = (lab_data_dir_path / "img2.png").string();
+    lab_data.img2 = cv::imread(img2_path);
+    std::string img3_path = (lab_data_dir_path / "img3.png").string();
+    lab_data.img3 = cv::imread(img3_path);
+
     return lab_data;
 }
 
@@ -104,8 +118,8 @@ void run_sfm_scene(const LabData& lab_data)
 
     auto t1 = -R1 * C1;
     auto t2 = -lab_data.R2 * lab_data.C2;
-    auto view1_ptr = std::make_shared<vp::View>(lab_data.K, vp::CameraPose(R1, C1));
-    auto view2_ptr = std::make_shared<vp::View>(lab_data.K, vp::CameraPose(lab_data.R2, t2));
+    auto view1_ptr = std::make_shared<vp::View>(lab_data.K, vp::CameraPose(R1, C1), lab_data.img1);
+    auto view2_ptr = std::make_shared<vp::View>(lab_data.K, vp::CameraPose(lab_data.R2, t2), lab_data.img2);
 
     vp::Scene scene;
     scene.add_view(view1_ptr, lab_data.x1)
@@ -114,16 +128,20 @@ void run_sfm_scene(const LabData& lab_data)
 
     const vp::Matrix4X& points = scene.get_points();
     // print first 10 points as row vectors
-    std::cout << "Points linear triangulation: \n" << points.block<3, 10>(0, 0).transpose() << "\n\n";
+    std::cout << "Points linear triangulation: \n"
+              << points.block<3, 10>(0, 0).transpose() << "\n\n";
 
     vp::PNPAlgorithm pnp;
     vp::CameraPose camera_pose3 = pnp.run(points, *lab_data.x3, lab_data.K);
-    auto view3_ptr = std::make_shared<vp::View>(lab_data.K, camera_pose3);
+    auto view3_ptr = std::make_shared<vp::View>(lab_data.K, camera_pose3, lab_data.img3);
 
     std::cout << "PNP done: \n" << camera_pose3.mat << "\n\n";
 
     scene.add_view(view3_ptr, lab_data.x3)
-         .optimize_points();
+         .visualize_scene();
+    
+    scene.optimize_points()
+         .visualize_scene();
 
     // print first 10 points as row vectors
     std::cout << "Final points: \n" << points.block<3, 10>(0, 0).transpose() << "\n\n";

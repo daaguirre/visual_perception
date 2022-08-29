@@ -25,11 +25,13 @@ set(${libName}_sources
         vp/view.cpp
         vp/scene.h
         vp/scene.cpp
+        utils/enumerate.h
 )
 
 generate_cpp_sources(FILES ${${libName}_sources})
 
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(OpenCV REQUIRED)
 
 add_library(${libName} ${${libName}_sources})
 
@@ -39,4 +41,5 @@ target_include_directories(${libName} PUBLIC
 
 target_link_libraries(${libName} 
     Eigen3::Eigen
+    ${OpenCV_LIBS}
 )
