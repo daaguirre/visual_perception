@@ -32,6 +32,10 @@ generate_cpp_sources(FILES ${${libName}_sources})
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(OpenCV REQUIRED)
+find_package(PCL 1.12.1 REQUIRED COMPONENTS visualization)
+
+add_definitions(${PCL_DEFINITIONS})
+
 
 add_library(${libName} ${${libName}_sources})
 
@@ -42,4 +46,5 @@ target_include_directories(${libName} PUBLIC
 target_link_libraries(${libName} 
     Eigen3::Eigen
     ${OpenCV_LIBS}
+    ${PCL_LIBRARIES}
 )

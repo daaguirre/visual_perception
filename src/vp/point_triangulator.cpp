@@ -34,32 +34,39 @@ Matrix4X PointTriangulator::run(const std::vector<View::ConstPtr>& views,
 
 Matrix4X vp::PointTriangulator::run_non_linear(
     const std::vector<View::ConstPtr>& views,
-    const std::vector<ConstPtr<Matrix3X>>& correspondences, 
-    const Matrix4X& points,
-    const size_t max_iterations
-) const
+    const std::vector<ConstPtr<Matrix3X>>& correspondences, const Matrix4X& points,
+    const size_t max_iterations) const
 {
     const size_t num_points = points.cols();
     Matrix4X opt_points(points.rows(), points.cols());
     const Matrix4X* previous_points = &points;
     double previous_error = 1e99;
-    for(size_t it = 0; it < max_iterations; ++it)
+
+    for (size_t it = 0; it < max_iterations; ++it)
     {
+        std::vector<Matrix3X> reprojections;
+        for (size_t i = 0; i < views.size(); i++)
+        {
+            Matrix3X reprojection = views[i]->get_P() * (*previous_points);
+            reprojections.push_back(std::move(reprojection));
+        }
+
         double total_error = 0;
         for (size_t i = 0; i < num_points; ++i)
         {
-            auto [opt_point, error] = run_single_point_non_linear(i, views, correspondences, *previous_points);
+            auto [opt_point, error] = run_single_point_non_linear(i, views, correspondences,
+                                                                  reprojections, *previous_points);
             opt_points.col(i) = opt_point;
             total_error += error;
         }
 
         std::cout << "Total error: " << total_error << "\n";
         double error_diff = previous_error - total_error;
-        if(error_diff < M_MIN_ERROR_DIFF)
+        if (error_diff < M_MIN_ERROR_DIFF)
         {
-            std::cout << "Reached min error at iteration " << it+1 << "\n";
+            std::cout << "Reached min error at iteration " << it + 1 << "\n";
             break;
-        } 
+        }
         previous_points = &opt_points;
         previous_error = total_error;
     }
@@ -68,7 +75,8 @@ Matrix4X vp::PointTriangulator::run_non_linear(
 
 std::tuple<Vector4, double> vp::PointTriangulator::run_single_point_non_linear(
     size_t point_idx, const std::vector<View::ConstPtr>& views,
-    const std::vector<ConstPtr<Matrix3X>>& correspondences, const Matrix4X& points) const
+    const std::vector<ConstPtr<Matrix3X>>& correspondences,
+    const std::vector<Matrix3X>& reprojections, const Matrix4X& points) const
 {
     const Vector4& current_point = points.col(point_idx);
 
@@ -81,7 +89,7 @@ std::tuple<Vector4, double> vp::PointTriangulator::run_single_point_non_linear(
         size_t row_idx0 = view_idx * 2;
         size_t row_idx1 = view_idx * 2 + 1;
         b.block<2, 1>(row_idx0, 0) = correspondences[view_idx]->col(point_idx).topRows(2);
-        Vector3 reprojection = view.get_P() * current_point;
+        Vector3 reprojection = reprojections[view_idx].col(point_idx);
         const double u = reprojection(0);
         const double v = reprojection(1);
         const double w = reprojection(2);

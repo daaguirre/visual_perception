@@ -16,6 +16,7 @@ endif()
 include(${CMAKE_SRC}/file.cmake)
 
 enable_testing()
+add_definitions(-DWORKSPACE_DIR="${CMAKE_CURRENT_LIST_DIR}")
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(apps)

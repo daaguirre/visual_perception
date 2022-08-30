@@ -64,7 +64,8 @@ public:
      */
     const Matrix4X& get_points() const;
 
-    const Scene& visualize_scene() const;
+    const Scene& show_scene() const;
+    const Scene& show_scene_point_cloud() const;
 
 private:
     std::vector<View::ConstPtr> m_views;

@@ -5,13 +5,13 @@
 # a file is only generated if it does not exist
 #
 #
-# \arg:files list of relative paths
+# \arg FILES: file list of relative paths
 function(generate_cpp_sources)
     set(options "")
     set(oneValueArgs "")
     set(multiValueArgs FILES)
     cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    message("${ARGS_FILES}")
+
     foreach(file ${ARGS_FILES})
         set(file_path ${CMAKE_CURRENT_SOURCE_DIR}/${file})
         if(NOT EXISTS ${file_path})

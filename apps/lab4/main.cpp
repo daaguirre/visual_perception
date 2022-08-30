@@ -15,7 +15,7 @@
 
 namespace fs = std::filesystem;
 
-static const fs::path lab_data_dir_path = fs::path("/home/diego/dev/VisualPerception/main/tests/resources");
+static const fs::path lab_data_dir_path = fs::path(WORKSPACE_DIR) / "tests/resources";
 
 struct LabData
 {
@@ -138,10 +138,11 @@ void run_sfm_scene(const LabData& lab_data)
     std::cout << "PNP done: \n" << camera_pose3.mat << "\n\n";
 
     scene.add_view(view3_ptr, lab_data.x3)
-         .visualize_scene();
+         .show_scene();
     
     scene.optimize_points()
-         .visualize_scene();
+         .show_scene()
+         .show_scene_point_cloud();
 
     // print first 10 points as row vectors
     std::cout << "Final points: \n" << points.block<3, 10>(0, 0).transpose() << "\n\n";
