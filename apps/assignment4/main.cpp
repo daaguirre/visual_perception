@@ -12,7 +12,6 @@
 #include "vp/types.h"
 #include "vp/utils/utils.h"
 
-
 namespace fs = std::filesystem;
 
 static const fs::path lab_data_dir_path = fs::path(WORKSPACE_DIR) / "tests/resources";
@@ -36,7 +35,6 @@ vp::Matrix33 estimate_fundamental_matrix(const LabData& lab_data);
 void estimate_essential_matrix(const vp::Matrix33& fundamental_matrix, const vp::Matrix33& K);
 void run_sfm_scene(const LabData& lab_data);
 
-
 int main(int, char**)
 {
     LabData lab_data = load_data();
@@ -45,10 +43,10 @@ int main(int, char**)
 
     run_sfm_scene(lab_data);
 
-    std::cout << "Visual Perception lab 4 done!\n";
+    std::cout << "Visual Perception assignment 4 done!\n";
 }
 
-vp::ConstPtr<vp::Matrix3X> load_keypoints(const std::string& file_name, const size_t num_points)
+vp::ConstPtr<vp::Matrix3X> load_keypoints(const std::string& file_name)
 {
     std::string data_file_path = (lab_data_dir_path / file_name).string();
     io::numpy::Array<double, 2> np_array;
@@ -63,9 +61,9 @@ vp::ConstPtr<vp::Matrix3X> load_keypoints(const std::string& file_name, const si
 LabData load_data()
 {
     LabData lab_data;
-    lab_data.x1 = load_keypoints("data_x1.npy", 429);
-    lab_data.x2 = load_keypoints("data_x2.npy", 429);
-    lab_data.x3 = load_keypoints("data_x3.npy", 429);
+    lab_data.x1 = load_keypoints("data_x1.npy");
+    lab_data.x2 = load_keypoints("data_x2.npy");
+    lab_data.x3 = load_keypoints("data_x3.npy");
 
     std::string data_K_file_path = (lab_data_dir_path / "data_K.npy").string();
     io::numpy::Array<double, 2> np_K;  // numpy array K
@@ -107,7 +105,7 @@ void estimate_essential_matrix(const vp::Matrix33& fundamental_matrix, const vp:
 {
     vp::EssentialMatrixEstimator essential_mat_estimator;
     vp::Matrix33 essential_mat =
-        essential_mat_estimator.estimateFromFundamentalMatrix(fundamental_matrix, K);
+        essential_mat_estimator.estimate_from_fundamental_matrix(fundamental_matrix, K);
     std::cout << "Essential Matrix: \n" << essential_mat << "\n";
 }
 
@@ -118,13 +116,18 @@ void run_sfm_scene(const LabData& lab_data)
 
     auto t1 = -R1 * C1;
     auto t2 = -lab_data.R2 * lab_data.C2;
-    auto view1_ptr = std::make_shared<vp::View>(lab_data.K, vp::CameraPose(R1, C1), lab_data.img1);
-    auto view2_ptr = std::make_shared<vp::View>(lab_data.K, vp::CameraPose(lab_data.R2, t2), lab_data.img2);
+    vp::CameraPose cp1(R1, t1);
+    auto view1_ptr = std::make_shared<vp::View>(lab_data.K, cp1, lab_data.img1);
 
+    vp::CameraPose cp2(lab_data.R2, t2);
+    auto view2_ptr = std::make_shared<vp::View>(lab_data.K, cp2, lab_data.img2);
+
+    // clang-format off
     vp::Scene scene;
     scene.add_view(view1_ptr, lab_data.x1)
          .add_view(view2_ptr, lab_data.x2)
          .triangulate_views();
+    // clang-format on
 
     const vp::Matrix4X& points = scene.get_points();
     // print first 10 points as row vectors
@@ -137,12 +140,14 @@ void run_sfm_scene(const LabData& lab_data)
 
     std::cout << "PNP done: \n" << camera_pose3.mat << "\n\n";
 
+    // clang-format off
     scene.add_view(view3_ptr, lab_data.x3)
          .show_scene();
-    
+
     scene.optimize_points()
          .show_scene()
          .show_scene_point_cloud();
+    // clang-format on
 
     // print first 10 points as row vectors
     std::cout << "Final points: \n" << points.block<3, 10>(0, 0).transpose() << "\n\n";

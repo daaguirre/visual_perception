@@ -1,5 +1,5 @@
 # APPS
-SET(appName lab4)
+SET(appName assignment4)
 SET(${appName}_sources
         main.cpp
 )
