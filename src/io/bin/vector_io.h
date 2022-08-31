@@ -36,6 +36,13 @@ public:
     static std::vector<T> deserializeVector(const std::string& file_path)
     {
         std::ifstream file(file_path, std::ios::binary);
+        if (file.fail())
+        {
+            std::stringstream error_stream;
+            error_stream << "Input file " << file_path << " not found\n";
+            throw std::invalid_argument(error_stream.str());
+        }
+
         file.seekg(0, std::ios::end);  // go to end of file
         long file_size = file.tellg();
         file.seekg(0, std::ios::beg);  // go to begin of file

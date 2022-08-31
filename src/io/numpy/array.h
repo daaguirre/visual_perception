@@ -34,11 +34,11 @@ struct ArrayImpl
  * uses a custom class definition for array of strings
  * @tparam Dims number of matrix dimensions
  */
-// template<int Dims>
-// struct ArrayImpl<std::string, Dims>
-// {
-//     using Type = StrArray<Dims>;
-// };
+template<int Dims>
+struct ArrayImpl<std::string, Dims>
+{
+    using Type = StrArray<Dims>;
+};
 
 /*!
  * Deduces the matrix type for the input T type

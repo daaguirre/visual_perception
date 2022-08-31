@@ -6,17 +6,17 @@
 #define __IO_NUMPY_STR_ARRAY_H_
 
 #include <Eigen/Dense>
+#include <boost/locale/encoding_utf.hpp>
 #include <cstring>
 #include <locale>
 #include <vector>
-// #include <boost/locale/encoding_utf.hpp>
 
 #include "reader.h"
 
 namespace numpy
 {
 
-// using boost::locale::conv::utf_to_utf;
+using boost::locale::conv::utf_to_utf;
 
 /*!
  * class for storing a numpy array of strings
@@ -104,9 +104,7 @@ public:
         }
 
         std::wstring wstring(&m_data[linearIdx], m_max_word_size);
-        std::string str = "";
-        // std::string str = utf_to_utf<char>(wstring.c_str(), wstring.c_str() +
-        // wstring.size());
+        std::string str = utf_to_utf<char>(wstring.c_str(), wstring.c_str() + wstring.size());
         str.erase(std::find(str.begin(), str.end(), '\0'), str.end());
         return str;
     }
@@ -114,22 +112,34 @@ public:
     /*!
      * @return  number of dimensions of the array
      */
-    const Dimensions &dimensions() { return m_dimensions; }
+    const Dimensions &dimensions()
+    {
+        return m_dimensions;
+    }
 
     /*!
      * @return data vector
      */
-    const std::vector<wchar_t> &data() { return m_data; }
+    const std::vector<wchar_t> &data()
+    {
+        return m_data;
+    }
 
     /*!
      * @return number of words contained by the array
      */
-    size_t getNumWords() { return m_num_words; }
+    size_t getNumWords()
+    {
+        return m_num_words;
+    }
 
     /*!
      * @return max word size
      */
-    size_t getMaxWordSize() { return m_max_word_size; }
+    size_t getMaxWordSize()
+    {
+        return m_max_word_size;
+    }
 
 private:
     std::vector<wchar_t> m_ata;
