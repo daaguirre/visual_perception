@@ -83,8 +83,8 @@ class ArrayIO
             return false;
         }
 
-        DType expectedDType = ArrayType<DataT>::value();
-        if (!header.dtype.match(expectedDType))
+        DType expected_dtype = ArrayType<DataT>::value();
+        if (!header.dtype.match(expected_dtype))
         {
             std::cerr << "ArrayIO Error because of type mismatching" << std::endl
                       << "Expected type is " << DATA_TYPE_TO_STR.at(ArrayType<DataT>::value().type)
