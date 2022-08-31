@@ -14,14 +14,14 @@ SET(appName VisualPerceptionTests)
 SET(${appName}_sources
     test_base.h
     test_base.cpp
-    fixtures/vp/fundamental_matrix_estimator_test.h
-    fixtures/vp/fundamental_matrix_estimator_test.cpp
-    fixtures/vp/essential_matrix_estimator_test.h
-    fixtures/vp/essential_matrix_estimator_test.cpp
-    fixtures/vp/point_triangulator_test.h
-    fixtures/vp/point_triangulator_test.cpp
-    fixtures/vp/pnp_algorithm_test.h
-    fixtures/vp/pnp_algorithm_test.cpp
+    vp/fundamental_matrix_estimator_test.h
+    vp/fundamental_matrix_estimator_test.cpp
+    vp/essential_matrix_estimator_test.h
+    vp/essential_matrix_estimator_test.cpp
+    vp/point_triangulator_test.h
+    vp/point_triangulator_test.cpp
+    vp/pnp_algorithm_test.h
+    vp/pnp_algorithm_test.cpp
 )
 
 generate_cpp_sources(FILES ${${appName}_sources})

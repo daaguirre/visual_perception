@@ -1,14 +1,12 @@
 
 #include "view.h"
 
-
 namespace vp
 {
 
-View::View(const Matrix33& k, const CameraPose& camera_pose, const cv::Mat& image)
-    : K(k), camera_pose(camera_pose), image(image)
+View::View(const Matrix33& k, const CameraPose& camera_pose, cv::Mat image)
+    : m_K(k), m_camera_pose(camera_pose), m_image(image)
 {
-    
 }
 
-}
+}  // namespace vp

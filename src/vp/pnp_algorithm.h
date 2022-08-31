@@ -20,21 +20,17 @@ namespace vp
 class PNPAlgorithm
 {
 public:
-    CameraPose run(const Matrix4X& world_points,
-                   const Matrix3X& pixels,
-                   const Matrix33& K);
+    CameraPose run(const Matrix4X& world_points, const Matrix3X& pixels, const Matrix33& K);
 
 private:
-
     /**
      * @brief factors out the camera intrinsic parameters from the pixel values
-     * 
+     *
      * @param K camera intrinsic parameters matrix
      * @param pixels pixel values
-     * @return Matrix 
+     * @return Matrix
      */
     MatrixX factor_out_intrinsic_parameters(const Matrix33& K, const Matrix3X& pixels);
-    
 };
 
 }  // namespace vp

@@ -34,7 +34,7 @@ public:
      * @return a non empty map with the unzipped files and their names if
      * operation was successful, otherwise empty
      */
-    NPZData readNPZFile(const std::string &filePath);
+    NPZData read_npz_file(const std::string &filePath);
 
 private:
     /*!
@@ -48,14 +48,14 @@ private:
         unsigned int unzipped_bytes;
     };
 
-    Reader numpy_reader;
+    Reader m_numpy_reader;
 
     /*!
      * parses input npz file as a regular zip file
      * @param npz_file input npz file
      * @return uncompressed numpy files
      */
-    NPZData parseZipFile(FILE *npz_file);
+    NPZData parse_zip_file(FILE *npz_file);
 
     /*!
      * parses local header of a zip file
@@ -63,7 +63,7 @@ private:
      * @param npz_file pointer to FILE to read extra data
      * @return The local header
      */
-    ZipLocalHeader parseZipLocalHeader(const std::vector<char> &local_header_array, FILE *npz_file);
+    ZipLocalHeader parse_zip_local_header(const std::vector<char> &local_header_array, FILE *npz_file);
 
     /*!
      * unzips numpyfile
@@ -72,14 +72,14 @@ private:
      * @return unzipped numpy file. If operation was successful is a valid file,
      * otherwise invalid
      */
-    File::Ptr unzipNumpyFile(const ZipLocalHeader &local_header, FILE *npz_file);
+    File::Ptr unzip_numpy_file(const ZipLocalHeader &local_header, FILE *npz_file);
 
     /*!
      * checks if input file has correct extension
      * @param file_path input file path
      * @return true if extension is correct, otherwise false
      */
-    static bool checkExtension(const std::string &file_path);
+    static bool check_extension(const std::string &file_path);
 };
 
 }  // namespace io::numpy

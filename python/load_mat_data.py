@@ -1,11 +1,9 @@
-import os
-
+import cv2
 import numpy as np
 from scipy.io import loadmat
-import cv2
 
 
-def main():
+def main() -> None:
     mat_file_path = "/home/diego/Documents/_91bfcc07c57f342de5453f0d60740e93_RoboticsPerceptionWeek4AssignmentCode/data.mat"
     data = loadmat(mat_file_path, squeeze_me=True)
     data_struct = data["data"][()]
@@ -18,12 +16,18 @@ def main():
     img1 = cv2.cvtColor(data_struct[6], cv2.COLOR_BGR2RGB)
     img2 = cv2.cvtColor(data_struct[7], cv2.COLOR_BGR2RGB)
     img3 = cv2.cvtColor(data_struct[8], cv2.COLOR_BGR2RGB)
-    with open("data_x1.npy", 'wb') as f:
-        np.save(f, np.transpose(x1))    
-    with open("data_x2.npy", 'wb') as f:
-        np.save(f, np.transpose(x2))    
-    with open("data_x3.npy", 'wb') as f:
-        np.save(f, np.transpose(x3))    
+    with open("data_x1.npy", "wb") as f:
+        np.save(f, np.transpose(x1))
+    with open("data_x2.npy", "wb") as f:
+        np.save(f, np.transpose(x2))
+    with open("data_x3.npy", "wb") as f:
+        np.save(f, np.transpose(x3))
+    with open("data_R.npy", "wb") as f:
+        np.save(f, R)
+    with open("data_C.npy", "wb") as f:
+        np.save(f, C)
+    with open("data_K.npy", "wb") as f:
+        np.save(f, K)
     cv2.imwrite("img1.png", img1)
     cv2.imwrite("img2.png", img2)
     cv2.imwrite("img3.png", img3)

@@ -75,79 +75,118 @@ struct ArrayType
     /*!
      * @return the corresponding Numpy DataType for the T type
      */
-    static DType value() { throw std::runtime_error("Data type not supported"); }
+    static DType value()
+    {
+        throw std::runtime_error("Data type not supported");
+    }
 };
 
 template <>
 struct ArrayType<unsigned char>
 {
-    static DType value() { return {DataType::U, 1}; }
+    static DType value()
+    {
+        return {DataType::U, 1};
+    }
 };
 
 template <>
 struct ArrayType<char>
 {
-    static DType value() { return {DataType::I, 1}; }
+    static DType value()
+    {
+        return {DataType::I, 1};
+    }
 };
 
 template <>
 struct ArrayType<unsigned short>
 {
-    static DType value() { return {DataType::U, 2}; }
+    static DType value()
+    {
+        return {DataType::U, 2};
+    }
 };
 
 template <>
 struct ArrayType<short>
 {
-    static DType value() { return {DataType::I, 2}; }
+    static DType value()
+    {
+        return {DataType::I, 2};
+    }
 };
 
 template <>
 struct ArrayType<unsigned int>
 {
-    static DType value() { return {DataType::U, 4}; }
+    static DType value()
+    {
+        return {DataType::U, 4};
+    }
 };
 
 template <>
 struct ArrayType<int>
 {
-    static DType value() { return {DataType::I, 4}; }
+    static DType value()
+    {
+        return {DataType::I, 4};
+    }
 };
 
 template <>
 struct ArrayType<float>
 {
-    static DType value() { return {DataType::F, 4}; }
+    static DType value()
+    {
+        return {DataType::F, 4};
+    }
 };
 
 template <>
 struct ArrayType<unsigned long>
 {
-    static DType value() { return {DataType::U, 8}; }
+    static DType value()
+    {
+        return {DataType::U, 8};
+    }
 };
 
 template <>
 struct ArrayType<long>
 {
-    static DType value() { return {DataType::I, 8}; }
+    static DType value()
+    {
+        return {DataType::I, 8};
+    }
 };
 
 template <>
 struct ArrayType<double>
 {
-    static DType value() { return {DataType::F, 8}; }
+    static DType value()
+    {
+        return {DataType::F, 8};
+    }
 };
 
 template <>
 struct ArrayType<std::string>
 {
-    static DType value() { return {DataType::UNICODE_STR, std::numeric_limits<size_t>::max()}; }
+    static DType value()
+    {
+        return {DataType::UNICODE_STR, std::numeric_limits<size_t>::max()};
+    }
 };
 
 template <>
 struct ArrayType<std::wstring>
 {
-    static DType value() { return {DataType::UNICODE_STR, std::numeric_limits<size_t>::max()}; }
+    static DType value()
+    {
+        return {DataType::UNICODE_STR, std::numeric_limits<size_t>::max()};
+    }
 };
 
 }  // namespace io::numpy

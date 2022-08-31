@@ -7,8 +7,9 @@ namespace vp
 
 // double PointTriangulator::M_MIN_ERROR_DIFF = 1e-3;
 
-Matrix4X PointTriangulator::run(const std::vector<View::ConstPtr>& views,
-                                const std::vector<ConstPtr<Matrix3X>>& correspondences) const
+Matrix4X PointTriangulator::run(
+    const std::vector<View::ConstPtr>& views,
+    const std::vector<ConstPtr<Matrix3X>>& correspondences) const
 {
     size_t num_points = correspondences[0]->cols();
     Matrix4X points_3d(4, num_points);
@@ -34,7 +35,8 @@ Matrix4X PointTriangulator::run(const std::vector<View::ConstPtr>& views,
 
 Matrix4X vp::PointTriangulator::run_non_linear(
     const std::vector<View::ConstPtr>& views,
-    const std::vector<ConstPtr<Matrix3X>>& correspondences, const Matrix4X& points,
+    const std::vector<ConstPtr<Matrix3X>>& correspondences,
+    const Matrix4X& points,
     const size_t max_iterations) const
 {
     const size_t num_points = points.cols();
@@ -54,8 +56,8 @@ Matrix4X vp::PointTriangulator::run_non_linear(
         double total_error = 0;
         for (size_t i = 0; i < num_points; ++i)
         {
-            auto [opt_point, error] = run_single_point_non_linear(i, views, correspondences,
-                                                                  reprojections, *previous_points);
+            auto [opt_point, error] = run_single_point_non_linear(
+                i, views, correspondences, reprojections, *previous_points);
             opt_points.col(i) = opt_point;
             total_error += error;
         }
@@ -74,9 +76,11 @@ Matrix4X vp::PointTriangulator::run_non_linear(
 }
 
 std::tuple<Vector4, double> vp::PointTriangulator::run_single_point_non_linear(
-    size_t point_idx, const std::vector<View::ConstPtr>& views,
+    size_t point_idx,
+    const std::vector<View::ConstPtr>& views,
     const std::vector<ConstPtr<Matrix3X>>& correspondences,
-    const std::vector<Matrix3X>& reprojections, const Matrix4X& points) const
+    const std::vector<Matrix3X>& reprojections,
+    const Matrix4X& points) const
 {
     const Vector4& current_point = points.col(point_idx);
 

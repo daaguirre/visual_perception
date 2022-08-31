@@ -43,30 +43,30 @@ public:
 
     StrArray() = default;
 
-    StrArray(const Shape &shape, size_t maxWordSize, const Buffer &data)
-        : maxWordSize(maxWordSize)
+    StrArray(const Shape &shape, size_t max_word_size, const Buffer &data)
+        : m_max_word_size(max_word_size)
     {
-        std::copy(shape.begin(), shape.end(), dimensions.begin());
+        std::copy(shape.begin(), shape.end(), m_dimensions.begin());
 
-        numWords = 1;
+        m_num_words = 1;
         for (const auto i : shape)
         {
-            numWords *= i;
+            m_num_words *= i;
         }
 
         for (size_t i = 0; i < shape.size(); ++i)
         {
-            size_t stride = maxWordSize;
+            size_t stride = max_word_size;
             for (size_t j = i + 1; j < shape.size(); ++j)
             {
                 stride *= shape[j];
             }
 
-            strides.push_back(stride);
+            m_strides.push_back(stride);
         }
 
-        data.resize(numWords * maxWordSize);
-        std::memcpy(&data[0], &data[0], data.size());
+        m_data.resize(m_num_words * max_word_size);
+        std::memcpy(&m_data[0], &data[0], data.size());
     }
 
     /*!
@@ -84,14 +84,14 @@ public:
     std::string operator()(Index firstIdx, Indexes... otherIndices)
     {
         std::array<Index, Dims> indexes{{firstIdx, otherIndices...}};
-        if (indexes.size() != dimensions.size())
+        if (indexes.size() != m_dimensions.size())
         {
             throw std::runtime_error("Wrong number of indexes");
         }
 
-        for (Index i = 0; i < static_cast<Index>(dimensions.size()); ++i)
+        for (Index i = 0; i < static_cast<Index>(m_dimensions.size()); ++i)
         {
-            if (indexes[i] >= dimensions[i])
+            if (indexes[i] >= m_dimensions[i])
             {
                 throw std::runtime_error("Out of range error!");
             }
@@ -100,10 +100,10 @@ public:
         size_t linearIdx = 0;
         for (size_t i = 0; i < indexes.size(); ++i)
         {
-            linearIdx += strides[i] * indexes[i];
+            linearIdx += m_strides[i] * indexes[i];
         }
 
-        std::wstring wstring(&data[linearIdx], maxWordSize);
+        std::wstring wstring(&m_data[linearIdx], m_max_word_size);
         std::string str = "";
         // std::string str = utf_to_utf<char>(wstring.c_str(), wstring.c_str() +
         // wstring.size());
@@ -114,29 +114,29 @@ public:
     /*!
      * @return  number of dimensions of the array
      */
-    const Dimensions &dimensions() { return dimensions; }
+    const Dimensions &dimensions() { return m_dimensions; }
 
     /*!
      * @return data vector
      */
-    const std::vector<wchar_t> &data() { return data; }
+    const std::vector<wchar_t> &data() { return m_data; }
 
     /*!
      * @return number of words contained by the array
      */
-    size_t getNumWords() { return numWords; }
+    size_t getNumWords() { return m_num_words; }
 
     /*!
      * @return max word size
      */
-    size_t getMaxWordSize() { return maxWordSize; }
+    size_t getMaxWordSize() { return m_max_word_size; }
 
 private:
-    std::vector<wchar_t> data;
-    Dimensions dimensions;
-    std::vector<size_t> strides;
-    size_t numWords;
-    size_t maxWordSize;
+    std::vector<wchar_t> m_ata;
+    Dimensions m_dimensions;
+    std::vector<size_t> m_strides;
+    size_t m_num_words;
+    size_t m_max_word_size;
 };
 
 }  // namespace numpy

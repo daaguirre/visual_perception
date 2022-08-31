@@ -1,22 +1,21 @@
 #include "fundamental_matrix_estimator.h"
-#include <Eigen/SVD>
+
 #include <Eigen/Eigen>
+#include <Eigen/SVD>
 
 namespace vp
 {
 
-FundamentalMatrixEstimator::FundamentalMatrixEstimator()
-{
-
-}
+FundamentalMatrixEstimator::FundamentalMatrixEstimator() {}
 
 Matrix33 FundamentalMatrixEstimator::estimate(const Matrix3X& x1, const Matrix3X& x2) const
 {
     std::unique_ptr<Eigen::MatrixXd> A_ptr = build_matrix_A(x1, x2);
     Eigen::BDCSVD<Eigen::MatrixXd> svd1(*A_ptr, Eigen::ComputeThinU | Eigen::ComputeThinV);
     const Eigen::MatrixXd& V = svd1.matrixV();
-    auto full_rank_F = Eigen::Map<const Eigen::Matrix<double, 3, 3, Eigen::RowMajor>>(V.col(8).data(), 3, 3);
-    
+    auto full_rank_F =
+        Eigen::Map<const Eigen::Matrix<double, 3, 3, Eigen::RowMajor>>(V.col(8).data(), 3, 3);
+
     // apply SVD again to make sure final matrix will be of rank 2
     Eigen::BDCSVD<Eigen::MatrixXd> svd2(full_rank_F, Eigen::ComputeThinU | Eigen::ComputeThinV);
     Matrix33 diagonal_matrix(svd2.singularValues().asDiagonal());
@@ -26,7 +25,9 @@ Matrix33 FundamentalMatrixEstimator::estimate(const Matrix3X& x1, const Matrix3X
     return F;
 }
 
-std::unique_ptr<MatrixX> FundamentalMatrixEstimator::build_matrix_A(const Matrix3X& x1, const Matrix3X& x2) const
+std::unique_ptr<MatrixX> FundamentalMatrixEstimator::build_matrix_A(
+    const Matrix3X& x1,
+    const Matrix3X& x2) const
 {
     std::unique_ptr<Eigen::MatrixXd> A_ptr = std::make_unique<Eigen::MatrixXd>(x1.cols(), 9);
     A_ptr->setZero();
@@ -42,4 +43,4 @@ std::unique_ptr<MatrixX> FundamentalMatrixEstimator::build_matrix_A(const Matrix
     return A_ptr;
 }
 
-}
+}  // namespace vp

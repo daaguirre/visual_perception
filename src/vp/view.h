@@ -11,8 +11,9 @@
 #ifndef __VP_VIEW_H_
 #define __VP_VIEW_H_
 
-#include "types.h"
 #include <opencv2/opencv.hpp>
+
+#include "types.h"
 
 namespace vp
 {
@@ -23,34 +24,35 @@ public:
     using Ptr = std::shared_ptr<View>;
     using ConstPtr = std::shared_ptr<const View>;
 
-    View(const Matrix33& k = Matrix33::Identity(), 
-         const CameraPose& CameraPose = CameraPose(),
-         const cv::Mat& mat = cv::Mat());
+    View(
+        const Matrix33& k = Matrix33::Identity(),
+        const CameraPose& CameraPose = CameraPose(),
+        cv::Mat mat = cv::Mat());
 
-    const Matrix33& get_K() const 
+    const Matrix33& get_K() const
     {
-        return K;
+        return m_K;
     }
 
     const CameraPose& get_camera_pose() const
     {
-        return camera_pose;
+        return m_camera_pose;
     }
 
     Matrix<3, 4> get_P() const
     {
-        return K * camera_pose.mat;
+        return m_K * m_camera_pose.mat;
     }
 
-    const cv::Mat& get_image() const
+    cv::Mat get_image() const
     {
-        return image;
+        return m_image;
     }
 
 private:
-    Matrix33 K;
-    CameraPose camera_pose;
-    cv::Mat image;
+    Matrix33 m_K;
+    CameraPose m_camera_pose;
+    cv::Mat m_image;
 };
 
 }  // namespace vp

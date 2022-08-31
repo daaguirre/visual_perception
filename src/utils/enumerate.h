@@ -2,7 +2,7 @@
  * @file enumerate.h
  * @author daaguirre
  * @brief implementation of python's enumerate
- * implementation details: 
+ * implementation details:
  * https://stackoverflow.com/questions/11328264/python-like-loop-enumeration-in-c
  * @date 2022-08-20
  *
@@ -28,10 +28,19 @@ public:
     {
     }
 
-    const EnumerateObject& begin() const { return *this; }
-    const EnumerateObject& end() const { return *this; }
+    const EnumerateObject& begin() const
+    {
+        return *this;
+    }
+    const EnumerateObject& end() const
+    {
+        return *this;
+    }
 
-    bool operator!=(const EnumerateObject&) const { return m_begin != m_end; }
+    bool operator!=(const EnumerateObject&) const
+    {
+        return m_begin != m_end;
+    }
 
     void operator++()
     {

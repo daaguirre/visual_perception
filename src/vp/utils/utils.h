@@ -16,19 +16,21 @@ template <typename T>
 using MatrixType = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
 
 template <typename T, int Dims>
-MatrixType<T> numpy_array_to_matrix(const io::numpy::Array<T, Dims>& np_array,
-                                    size_t rows_index = 0, size_t columns_index = 1)
+MatrixType<T> numpy_array_to_matrix(
+    const io::numpy::Array<T, Dims>& np_array,
+    size_t rows_index = 0,
+    size_t columns_index = 1)
 {
-    return Eigen::Map<const MatrixType<T>>(np_array.data(), np_array.dimension(rows_index),
-                                           np_array.dimension(columns_index));
+    return Eigen::Map<const MatrixType<T>>(
+        np_array.data(), np_array.dimension(rows_index), np_array.dimension(columns_index));
 }
 
 /**
  * @brief converts input vector into an homogeneous vector
- * 
- * @tparam Dims bumber of dimensions of input vector 
+ *
+ * @tparam Dims bumber of dimensions of input vector
  * @param vector homogenous vector with a one appended into the new dimension
- * @return Vector<Dims + 1> 
+ * @return Vector<Dims + 1>
  */
 template <size_t Dims>
 Vector<Dims + 1> to_homogeneous_vector(const Vector<Dims>& vector)

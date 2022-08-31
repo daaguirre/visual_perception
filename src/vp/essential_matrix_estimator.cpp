@@ -1,11 +1,11 @@
 #include "essential_matrix_estimator.h"
 
-
 namespace vp
 {
 
-Matrix33 EssentialMatrixEstimator::estimateFromFundamentalMatrix(const Matrix33& F,
-                                                                 const Matrix33& K) const
+Matrix33 EssentialMatrixEstimator::estimate_from_fundamental_matrix(
+    const Matrix33& F,
+    const Matrix33& K) const
 {
     Matrix33 full_rank_e = K.transpose() * F * K;
     Eigen::BDCSVD<Eigen::MatrixXd> svd(full_rank_e, Eigen::ComputeThinU | Eigen::ComputeThinV);

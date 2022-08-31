@@ -21,7 +21,7 @@ public:
      * @param k camera intrinsic parameter cmatrix 3x3
      * @return Matrix33 3x3 essential matrix with singular values (1, 1, 0) rank 2
      */
-    Matrix33 estimateFromFundamentalMatrix(const Matrix33& f, const Matrix33& k) const;
+    Matrix33 estimate_from_fundamental_matrix(const Matrix33& f, const Matrix33& k) const;
 };
 
 }  // namespace vp

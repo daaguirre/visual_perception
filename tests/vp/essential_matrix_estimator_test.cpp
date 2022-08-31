@@ -20,7 +20,7 @@ TEST_F(EssentialMatrixEstimatorTest, shouldObtainEssentialMatrix)
     std::cout << "\n" << K << "\n";
 
     vp::EssentialMatrixEstimator estimator;
-    Eigen::MatrixXd E = estimator.estimateFromFundamentalMatrix(F, K);
+    Eigen::MatrixXd E = estimator.estimate_from_fundamental_matrix(F, K);
     std::cout << "\n" << "Essential matrix:" << "\n";
     std::cout << "\n" << E << "\n";
     vp::Matrix33 expected_matrix;

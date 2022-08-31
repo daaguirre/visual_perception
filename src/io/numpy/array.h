@@ -13,7 +13,6 @@
 // // turn the warnings back on
 // #pragma GCC diagnostic pop
 
-
 namespace io::numpy
 {
 
@@ -22,7 +21,7 @@ namespace io::numpy
  * @tparam T numeric type
  * @tparam Dims number of matrix dimensions
  */
-template<typename T, int Dims>
+template <typename T, int Dims>
 struct ArrayImpl
 {
     /*!
@@ -44,7 +43,7 @@ struct ArrayImpl
 /*!
  * Deduces the matrix type for the input T type
  */
-template<typename T, int Dims>
+template <typename T, int Dims>
 using Array = typename ArrayImpl<T, Dims>::Type;
 
 /*!
@@ -52,6 +51,6 @@ using Array = typename ArrayImpl<T, Dims>::Type;
  */
 using Index = Eigen::Index;
 
-}
+}  // namespace io::numpy
 
-#endif // __IO_NUMPY_ARRAY_H_
+#endif  // __IO_NUMPY_ARRAY_H_

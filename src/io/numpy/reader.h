@@ -151,7 +151,7 @@ public:
      * \param file_path path to file
      * \return numpy file deserialized as a File struct
      */
-    File::Ptr readFile(const std::string &file_path);
+    File::Ptr read_file(const std::string &file_path);
 
     /*!
      * reads a numpy file from a binary buffer
@@ -159,7 +159,7 @@ public:
      * @return a valid numpy file if operation was successful,
      * otherwise invalid
      */
-    File::Ptr readNumpyBuffer(const Buffer &buffer);
+    File::Ptr read_numpy_buffer(const Buffer &buffer);
 
 protected:
     /*!
@@ -167,7 +167,7 @@ protected:
      * \param file_data numpy file binary data
      * \return true if binary data represents a numpy file, false otherwise
      */
-    bool isNumpyFile(const Buffer &file_data);
+    bool is_numpy_file(const Buffer &file_data);
 
     /*!
      * \brief gets header from numpy file binary data
@@ -175,21 +175,21 @@ protected:
      * \return numpy header as Header struct and the number of bytes
      * occupied by the header
      */
-    std::pair<Header, size_t> getHeader(const Buffer &file_data);
+    std::pair<Header, size_t> get_header(const Buffer &file_data);
 
     /*!
      * \brief gets array shape from header info
      * \param header_string numpy header string
      * \return array shape as a vector of ints
      */
-    Shape getArrayShapeFromHeaderString(const std::string &header_string);
+    Shape get_array_shape_from_header_string(const std::string &header_string);
 
     /*!
      * processes the 'Descr' field of the numpy header
      * @param header_str input numpy header string
      * @return Endiannes and DataType
      */
-    static std::pair<Endianness, DType> processDescrField(const std::string &header_str);
+    static std::pair<Endianness, DType> process_descr_field(const std::string &header_str);
 };
 
 }  // namespace io::numpy

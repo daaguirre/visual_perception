@@ -17,10 +17,10 @@ namespace fs = std::filesystem;
 
 const std::string NPZReader::NPZ_EXTENSION = ".npz";
 
-NPZData NPZReader::readNPZFile(const std::string &file_path)
+NPZData NPZReader::read_npz_file(const std::string &file_path)
 {
     NPZData npz_data;
-    bool success = checkExtension(file_path);
+    bool success = check_extension(file_path);
     if (!success)
     {
         std::cerr << "input path is not a npz file: " << file_path << std::endl;
@@ -36,7 +36,7 @@ NPZData NPZReader::readNPZFile(const std::string &file_path)
 
     try
     {
-        npz_data = parseZipFile(npz_file);
+        npz_data = parse_zip_file(npz_file);
     }
     catch (std::exception &e)
     {
@@ -49,7 +49,7 @@ NPZData NPZReader::readNPZFile(const std::string &file_path)
     return npz_data;
 }
 
-NPZData NPZReader::parseZipFile(FILE *npz_file)
+NPZData NPZReader::parse_zip_file(FILE *npz_file)
 {
     NPZData npz_data;
     while (true)
@@ -67,10 +67,10 @@ NPZData NPZReader::parseZipFile(FILE *npz_file)
             break;
         }
 
-        ZipLocalHeader local_header = parseZipLocalHeader(local_header_array, npz_file);
+        ZipLocalHeader local_header = parse_zip_local_header(local_header_array, npz_file);
         if (local_header.zip_method != NO_COMPRESSED_METHOD)
         {
-            File::Ptr numpy_file_ptr = unzipNumpyFile(local_header, npz_file);
+            File::Ptr numpy_file_ptr = unzip_numpy_file(local_header, npz_file);
             if (numpy_file_ptr != nullptr)
             {
                 // input data local_header.array_name and numpy_file_ptr will be
@@ -90,8 +90,9 @@ NPZData NPZReader::parseZipFile(FILE *npz_file)
     return npz_data;
 }
 
-NPZReader::ZipLocalHeader NPZReader::parseZipLocalHeader(const std::vector<char> &local_header_array,
-                                                         FILE *npz_file)
+NPZReader::ZipLocalHeader NPZReader::parse_zip_local_header(
+    const std::vector<char> &local_header_array,
+    FILE *npz_file)
 {
     ZipLocalHeader localHeader;
     // read in the variable name
@@ -129,7 +130,7 @@ NPZReader::ZipLocalHeader NPZReader::parseZipLocalHeader(const std::vector<char>
     return localHeader;
 }
 
-File::Ptr NPZReader::unzipNumpyFile(const NPZReader::ZipLocalHeader &local_header, FILE *npz_file)
+File::Ptr NPZReader::unzip_numpy_file(const NPZReader::ZipLocalHeader &local_header, FILE *npz_file)
 {
     std::vector<unsigned char> zippedData(local_header.zipped_bytes);
     std::vector<unsigned char> unzipped_data(local_header.unzipped_bytes);
@@ -164,11 +165,11 @@ File::Ptr NPZReader::unzipNumpyFile(const NPZReader::ZipLocalHeader &local_heade
         throw std::runtime_error("unzipNumpyFile: Error during inflate process.");
     }
 
-    File::Ptr numpy_file_ptr = numpy_reader.readNumpyBuffer(unzipped_data);
+    File::Ptr numpy_file_ptr = m_numpy_reader.read_numpy_buffer(unzipped_data);
     return numpy_file_ptr;
 }
 
-bool NPZReader::checkExtension(const std::string &file_path)
+bool NPZReader::check_extension(const std::string &file_path)
 {
     std::string extension = fs::path(file_path).extension();
 

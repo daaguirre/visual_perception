@@ -12,27 +12,28 @@ namespace io::numpy
 
 namespace fs = std::filesystem;
 
-std::array<unsigned char, Reader::MAGIC_LEN> Reader::NUMPY_MAGIC = {0x93, 0x4E, 0x55,
-                                                                    0x4D, 0x50, 0x59};
+std::array<unsigned char, Reader::MAGIC_LEN> Reader::NUMPY_MAGIC =
+    {0x93, 0x4E, 0x55, 0x4D, 0x50, 0x59};
 
 const std::map<std::string, Endianness> Reader::NUMPY_ENDIANNESS_STR_MAP = {
-    {"<", Endianness::LE}, {"|", Endianness::LE}, {">", Endianness::BE}
-};
+    {"<", Endianness::LE},
+    {"|", Endianness::LE},
+    {">", Endianness::BE}};
 
 const std::string Reader::NUMPY_DATA_TYPE_SUBSTR = "'descr': '";
 
 Reader::Reader() {}
 
-File::Ptr Reader::readFile(const std::string& file_path)
+File::Ptr Reader::read_file(const std::string& file_path)
 {
     Buffer numpy_buffer = bin::VectorIO::deserializeVector<Byte>(file_path);
-    return readNumpyBuffer(numpy_buffer);
+    return read_numpy_buffer(numpy_buffer);
 }
 
-File::Ptr Reader::readNumpyBuffer(const Buffer& numpy_buffer)
+File::Ptr Reader::read_numpy_buffer(const Buffer& numpy_buffer)
 {
     File::Ptr numpy_file_ptr;
-    if (isNumpyFile(numpy_buffer))
+    if (is_numpy_file(numpy_buffer))
     {
         try
         {
@@ -40,7 +41,7 @@ File::Ptr Reader::readNumpyBuffer(const Buffer& numpy_buffer)
             numpy_file_ptr->major_version = numpy_buffer[MAJOR_VERSION_POS];
             numpy_file_ptr->minor_version = numpy_buffer[MINOR_VERSION_POS];
             size_t headerBytes = 0;
-            std::tie(numpy_file_ptr->header, headerBytes) = getHeader(numpy_buffer);
+            std::tie(numpy_file_ptr->header, headerBytes) = get_header(numpy_buffer);
             int array_data_pos = HEADER_POS + headerBytes;
             numpy_file_ptr->array_data =
                 Buffer{numpy_buffer.begin() + array_data_pos, numpy_buffer.end()};
@@ -61,7 +62,7 @@ File::Ptr Reader::readNumpyBuffer(const Buffer& numpy_buffer)
     return numpy_file_ptr;
 }
 
-bool Reader::isNumpyFile(const Buffer& file_data)
+bool Reader::is_numpy_file(const Buffer& file_data)
 {
     bool is_numpy_file = true;
     for (size_t i = 0; i < MAGIC_LEN; ++i)
@@ -72,7 +73,7 @@ bool Reader::isNumpyFile(const Buffer& file_data)
     return is_numpy_file;
 }
 
-std::pair<Header, size_t> Reader::getHeader(const Buffer& file_data)
+std::pair<Header, size_t> Reader::get_header(const Buffer& file_data)
 {
     int length = 0;
     int shift_bits = 0;
@@ -85,8 +86,8 @@ std::pair<Header, size_t> Reader::getHeader(const Buffer& file_data)
     int header_pos = HEADER_LEN_POS + HEADER_LEN_LEN;
     std::string header_str((char*)&file_data[header_pos], length);
     Header header;
-    header.shape = getArrayShapeFromHeaderString(header_str);
-    std::tie(header.endianness, header.dtype) = processDescrField(header_str);
+    header.shape = get_array_shape_from_header_string(header_str);
+    std::tie(header.endianness, header.dtype) = process_descr_field(header_str);
 
     // finally store string
     header.str = std::move(header_str);
@@ -94,7 +95,7 @@ std::pair<Header, size_t> Reader::getHeader(const Buffer& file_data)
     return {header, length};
 }
 
-std::pair<Endianness, DType> Reader::processDescrField(const std::string& header_str)
+std::pair<Endianness, DType> Reader::process_descr_field(const std::string& header_str)
 {
     Endianness endianness = Endianness::UNKNOWN;
     DType dtype = {DataType::UNKNOWN, 0};
@@ -143,15 +144,16 @@ std::pair<Endianness, DType> Reader::processDescrField(const std::string& header
     return {endianness, dtype};
 }
 
-Shape Reader::getArrayShapeFromHeaderString(const std::string& header_string)
+Shape Reader::get_array_shape_from_header_string(const std::string& header_string)
 {
     Shape shape_values;
     const std::string shape_str = "shape";
     const char start_str = '(';
     const char end_str = ')';
 
-    std::string tmp = header_string.substr(header_string.find(shape_str) + shape_str.size(),
-                                           header_string.size() - 1);
+    std::string tmp = header_string.substr(
+        header_string.find(shape_str) + shape_str.size(),
+        header_string.size() - 1);
     size_t start_pos = tmp.find(start_str);
     size_t end_pos = tmp.find(end_str);
     size_t length = end_pos - start_pos - 1;
