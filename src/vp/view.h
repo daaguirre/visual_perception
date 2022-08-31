@@ -18,6 +18,10 @@
 namespace vp
 {
 
+/**
+ * @brief This class represents a camera view 
+ * Contains the image taken from a camera pose and the intrinsic parameters of the camera.
+ */
 class View
 {
 public:
@@ -29,19 +33,34 @@ public:
         const CameraPose& CameraPose = CameraPose(),
         cv::Mat mat = cv::Mat());
 
+    /**
+     * @brief obtains camera intrinsic parameters
+     * 
+     * @return const Matrix33& 
+     */
     const Matrix33& get_K() const
     {
         return m_K;
     }
 
+    /**
+     * @brief Get the camera pose object from where the image was taken
+     * 
+     * @return const CameraPose& reference to camera pose object
+     */
     const CameraPose& get_camera_pose() const
     {
         return m_camera_pose;
     }
 
-    Matrix<3, 4> get_P() const
+    /**
+     * @brief obtains perspective matrix K[R t]
+     * 
+     * @return Matrix<3, 4> 
+     */
+    const Matrix<3, 4>& get_P() const
     {
-        return m_K * m_camera_pose.mat;
+        return m_P;
     }
 
     cv::Mat get_image() const
@@ -52,6 +71,7 @@ public:
 private:
     Matrix33 m_K;
     CameraPose m_camera_pose;
+    Matrix<3, 4> m_P;
     cv::Mat m_image;
 };
 

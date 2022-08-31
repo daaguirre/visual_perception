@@ -13,7 +13,7 @@
 
 #include "reader.h"
 
-namespace numpy
+namespace io::numpy
 {
 
 using boost::locale::conv::utf_to_utf;
@@ -142,7 +142,7 @@ public:
     }
 
 private:
-    std::vector<wchar_t> m_ata;
+    std::vector<wchar_t> m_data;
     Dimensions m_dimensions;
     std::vector<size_t> m_strides;
     size_t m_num_words;

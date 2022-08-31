@@ -6,6 +6,8 @@
 
 #include <unsupported/Eigen/CXX11/Tensor>
 
+#include "str_array.h"
+
 // #pragma GCC diagnostic push
 // // turn off the specific warning
 // #pragma GCC diagnostic ignored "-Wignored-attributes"
@@ -34,7 +36,7 @@ struct ArrayImpl
  * uses a custom class definition for array of strings
  * @tparam Dims number of matrix dimensions
  */
-template<int Dims>
+template <int Dims>
 struct ArrayImpl<std::string, Dims>
 {
     using Type = StrArray<Dims>;
